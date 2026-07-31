@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import API_BASE from "../api/api";
 
 export default function HomePage({ token }) {
+  /* Product List */
   const [products, setProducts] = useState([]);
+
+  /* Product Form */
   const [form, setForm] = useState({
     name: "",
     category: "",
@@ -10,20 +13,26 @@ export default function HomePage({ token }) {
     image: "",
     description: "",
   });
+
+  /* Error Message */
   const [error, setError] = useState("");
 
+  /* Load Products */
   const loadProducts = async () => {
     const res = await fetch(`${API_BASE}/products`);
     const data = await res.json();
     setProducts(data);
   };
 
+  /* Load Products When Page Opens */
   useEffect(() => {
     loadProducts();
   }, []);
 
+  /* Submit Product Form */
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
 
     const res = await fetch(`${API_BASE}/products`, {
@@ -40,11 +49,13 @@ export default function HomePage({ token }) {
 
     const data = await res.json();
 
+    /* Display Error Message */
     if (!res.ok) {
       setError(data.error || "Product could not be added");
       return;
     }
 
+    /* Clear Product Form */
     setForm({
       name: "",
       category: "",
@@ -53,17 +64,25 @@ export default function HomePage({ token }) {
       description: "",
     });
 
+    /* Reload Product List */
     loadProducts();
   };
 
   return (
     <main className="page">
+      {/* Hero Section */}
       <section className="hero">
         <div>
-          <h1>Fitness Tech</h1>
+          {/* Website Heading */}
+          <h1>
+            Fitness<span className="tech-green">Tech</span>
+          </h1>
+
+          {/* Website Description */}
           <p>
-            A fitness website where users can view memberships, browse gym
-            products, contact the gym, and manage their profile.
+            Fitness<span className="tech-green">Tech</span> is a fitness
+            website where users can view memberships, browse gym products,
+            contact the gym, and manage their profile.
           </p>
         </div>
       </section>
