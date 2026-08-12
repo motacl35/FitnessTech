@@ -1,0 +1,220 @@
+/* =====================================
+   FITNESS TECH SHARED PAGE THEME
+===================================== */
+
+:root {
+  --ft-black: #070807;
+  --ft-dark: #0d0f0d;
+  --ft-card: #131613;
+  --ft-lime: #ccff00;
+  --ft-white: #f5f5f5;
+  --ft-gray: #a1a6a0;
+  --ft-border: #292e29;
+}
+
+body {
+  margin: 0;
+  background: var(--ft-black);
+  color: var(--ft-white);
+  font-family: "Inter", Arial, sans-serif;
+}
+
+.main-content {
+  min-height: calc(100vh - 90px);
+  background:
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(204, 255, 0, 0.06),
+      transparent 30%
+    ),
+    var(--ft-black);
+}
+
+
+/* Shared page container */
+
+.ft-page {
+  width: min(1200px, 92%);
+  margin: 0 auto;
+  padding: 70px 0;
+}
+
+
+/* Page headings */
+
+.ft-page h1,
+.ft-page h2,
+.ft-page h3 {
+  font-family: "Barlow Condensed", sans-serif;
+  text-transform: uppercase;
+}
+
+.ft-page h1 {
+  margin: 0 0 15px;
+  font-size: 58px;
+  color: var(--ft-white);
+}
+
+.ft-page h2 {
+  color: var(--ft-white);
+}
+
+.ft-page h3 {
+  color: var(--ft-white);
+}
+
+.ft-page-title-accent {
+  color: var(--ft-lime);
+}
+
+.ft-page-description {
+  color: var(--ft-gray);
+  line-height: 1.7;
+}
+
+
+/* Shared cards */
+
+.ft-card {
+  background: var(--ft-card);
+  border: 1px solid var(--ft-border);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.ft-card + .ft-card {
+  margin-top: 20px;
+}
+
+
+/* Inputs */
+
+.ft-page input,
+.ft-page select,
+.ft-page textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  background: #0b0d0b;
+  color: var(--ft-white);
+
+  border: 1px solid var(--ft-border);
+  border-radius: 7px;
+
+  padding: 13px 14px;
+
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+
+  outline: none;
+}
+
+.ft-page input:focus,
+.ft-page select:focus,
+.ft-page textarea:focus {
+  border-color: var(--ft-lime);
+}
+
+
+/* Labels */
+
+.ft-page label {
+  color: var(--ft-gray);
+  font-weight: 600;
+}
+
+
+/* Main buttons */
+
+.ft-button {
+  display: inline-block;
+
+  background: var(--ft-lime);
+  color: #050505;
+
+  border: 1px solid var(--ft-lime);
+  border-radius: 7px;
+
+  padding: 13px 24px;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+.ft-button:hover {
+  background: #b8e600;
+}
+
+
+/* Secondary buttons */
+
+.ft-button-secondary {
+  display: inline-block;
+
+  background: transparent;
+  color: var(--ft-white);
+
+  border: 1px solid var(--ft-lime);
+  border-radius: 7px;
+
+  padding: 13px 24px;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  cursor: pointer;
+}
+
+.ft-button-secondary:hover {
+  background: var(--ft-lime);
+  color: #050505;
+}
+
+
+/* Error messages */
+
+.ft-error {
+  padding: 12px;
+
+  background: rgba(255, 70, 70, 0.08);
+  color: #ff7777;
+
+  border: 1px solid #7a2b2b;
+  border-radius: 7px;
+}
+
+
+/* Success messages */
+
+.ft-success {
+  padding: 12px;
+
+  background: rgba(204, 255, 0, 0.07);
+  color: var(--ft-lime);
+
+  border: 1px solid #526600;
+  border-radius: 7px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 700px) {
+  .ft-page {
+    width: 90%;
+    padding: 45px 0;
+  }
+
+  .ft-page h1 {
+    font-size: 44px;
+  }
+}

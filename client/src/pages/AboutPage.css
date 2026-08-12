@@ -1,0 +1,197 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap");
+
+.about-page {
+  min-height: calc(100vh - 90px);
+  padding: 70px 20px 100px;
+
+  background:
+    radial-gradient(
+      circle at 75% 20%,
+      rgba(204, 255, 0, 0.08),
+      transparent 30%
+    ),
+    #070807;
+
+  color: #f5f5f5;
+  font-family: "Inter", sans-serif;
+}
+
+.about-container {
+  width: min(1200px, 94%);
+  margin: 0 auto;
+}
+
+/* =========================
+   ABOUT HEADER
+========================= */
+
+.about-header {
+  max-width: 850px;
+  margin-bottom: 65px;
+}
+
+.about-kicker {
+  margin: 0 0 12px;
+
+  color: #ccff00;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.about-title {
+  margin: 0 0 25px;
+
+  color: #f5f5f5;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 68px;
+  font-weight: 800;
+
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.about-title span,
+.green-text {
+  color: #ccff00;
+}
+
+.about-description {
+  margin: 0;
+
+  color: #a1a6a0;
+
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+/* =========================
+   TECHNOLOGIES
+========================= */
+
+.technology-section {
+  padding-top: 35px;
+
+  border-top: 1px solid #292e29;
+}
+
+.technology-section h2 {
+  margin: 0 0 30px;
+
+  color: #f5f5f5;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+.technology-section h2 span {
+  color: #ccff00;
+}
+
+/* =========================
+   TECHNOLOGY GRID
+========================= */
+
+.technology-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(200px, 1fr));
+
+  gap: 18px;
+}
+
+/* =========================
+   TECHNOLOGY CARDS
+========================= */
+
+.technology-card {
+  position: relative;
+
+  min-height: 170px;
+  padding: 25px;
+
+  background: #131613;
+
+  border: 1px solid #292e29;
+  border-radius: 12px;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.technology-card:hover {
+  transform: translateY(-5px);
+
+  border-color: #ccff00;
+}
+
+.technology-number {
+  margin-bottom: 25px;
+
+  color: #ccff00;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.technology-card h3 {
+  margin: 0 0 7px;
+
+  color: #f5f5f5;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 25px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+.technology-card p {
+  margin: 0;
+
+  color: #8d938c;
+
+  font-size: 14px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  .about-page {
+    padding: 45px 18px 70px;
+  }
+
+  .about-container {
+    width: 100%;
+  }
+
+  .about-title {
+    font-size: 48px;
+  }
+
+  .about-description {
+    font-size: 16px;
+  }
+
+  .technology-section h2 {
+    font-size: 32px;
+  }
+
+  .technology-grid {
+    grid-template-columns: 1fr;
+  }
+}

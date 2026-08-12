@@ -1,6 +1,7 @@
-import { useState } from "react";
 
-/* ContactPage Component */
+import { useState } from "react";
+import "./ContactPage.css";
+
 function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -8,10 +9,9 @@ function ContactPage() {
     phone: "",
     reason: "",
     contact_method: "email",
-    message: ""
+    message: "",
   });
 
-  /* Form validation errors and thank you message */
   const [errors, setErrors] = useState({});
   const [thankYou, setThankYou] = useState("");
 
@@ -20,7 +20,7 @@ function ContactPage() {
 
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   }
 
@@ -80,124 +80,199 @@ function ContactPage() {
       phone: "",
       reason: "",
       contact_method: "email",
-      message: ""
+      message: "",
     });
   }
 
-  /* Render the contact page */
   return (
-    <main className="page-content contatct-page">
-      <section id="contact" className="section-block">
-        <h2 className="section-heading">Contact Us</h2>
+    <main className="contact-page">
+      <section className="contact-container">
 
-        <form className="contact-form" onSubmit={handleSubmit} noValidate>
-          <div className="input-group">
-            <input
-              type="text"
-              name="name"
-              placeholder=" "
-              value={formData.name}
-              onChange={handleChange}
-            />
-            <label>Full Name</label>
-            <div className="error-message">{errors.name}</div>
-          </div>
+        <div className="contact-header">
+          <p className="contact-kicker">
+            QUESTIONS • SUPPORT • FEEDBACK
+          </p>
 
-          <div className="input-group">
-            <input
-              type="text"
-              name="email"
-              placeholder=" "
-              value={formData.email}
-              onChange={handleChange}
-            />
-            <label>Email</label>
-            <div className="error-message">{errors.email}</div>
-          </div>
+          <h1 className="contact-title">
+            CONTACT <span>US</span>
+          </h1>
 
-          <div className="input-group">
-            <input
-              type="tel"
-              name="phone"
-              placeholder=" "
-              value={formData.phone}
-              onChange={handleChange}
-            />
-            <label>Phone Number</label>
-            <div className="error-message">{errors.phone}</div>
-          </div>
-          <div className="input-group select-group">
-            <select
-              name="reason"
-              value={formData.reason}
-              onChange={handleChange}
-            >
-              <option value="">Select a reason</option>
-              <option value="question">Question</option>
-              <option value="general">General Inquiry</option>
-              <option value="project">Project Collaboration</option>
-              <option value="feedback">Website Feedback</option>
-            </select>
-            <label>Reason for Contact</label>
-            <div className="error-message">{errors.reason}</div>
-          </div>
+          <p className="contact-description">
+            Have a question or need help? Fill out the form below and
+            the FitnessTech team will get back to you.
+          </p>
+        </div>
 
-          <fieldset className="contact-preference">
-            <legend>Preferred Contact Method</legend>
+        <section className="contact-card">
+          <form
+            className="contact-form"
+            onSubmit={handleSubmit}
+            noValidate
+          >
 
-            <div className="radio-group">
-              <label
-                className={
-                  formData.contact_method === "email"
-                    ? "radio-option selected-option"
-                    : "radio-option"
-                }
-              >
+            <div className="contact-form-grid">
+
+              <div className="contact-field">
+                <label htmlFor="name">Full Name</label>
+
                 <input
-                  type="radio"
-                  name="contact_method"
-                  value="email"
-                  checked={formData.contact_method === "email"}
+                  id="name"
+                  type="text"
+                  name="name"
+                  placeholder="Enter your full name"
+                  value={formData.name}
                   onChange={handleChange}
                 />
-                Email
-              </label>
 
-              <label
-                className={
-                  formData.contact_method === "phone"
-                    ? "radio-option selected-option"
-                    : "radio-option"
-                }
-              >
+                {errors.name && (
+                  <div className="contact-error">
+                    {errors.name}
+                  </div>
+                )}
+              </div>
+
+              <div className="contact-field">
+                <label htmlFor="email">Email</label>
+
                 <input
-                  type="radio"
-                  name="contact_method"
-                  value="phone"
-                  checked={formData.contact_method === "phone"}
+                  id="email"
+                  type="text"
+                  name="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
                   onChange={handleChange}
                 />
-                Phone
-              </label>
+
+                {errors.email && (
+                  <div className="contact-error">
+                    {errors.email}
+                  </div>
+                )}
+              </div>
+
+              <div className="contact-field">
+                <label htmlFor="phone">Phone Number</label>
+
+                <input
+                  id="phone"
+                  type="tel"
+                  name="phone"
+                  placeholder="Enter your phone number"
+                  value={formData.phone}
+                  onChange={handleChange}
+                />
+
+                {errors.phone && (
+                  <div className="contact-error">
+                    {errors.phone}
+                  </div>
+                )}
+              </div>
+
+              <div className="contact-field">
+                <label htmlFor="reason">Reason for Contact</label>
+
+                <select
+                  id="reason"
+                  name="reason"
+                  value={formData.reason}
+                  onChange={handleChange}
+                >
+                  <option value="">Select a reason</option>
+                  <option value="question">Question</option>
+                  <option value="general">General Inquiry</option>
+                  <option value="project">Project Collaboration</option>
+                  <option value="feedback">Website Feedback</option>
+                </select>
+
+                {errors.reason && (
+                  <div className="contact-error">
+                    {errors.reason}
+                  </div>
+                )}
+              </div>
+
             </div>
-          </fieldset>
 
-          <div className="input-group">
-            <textarea
-              name="message"
-              placeholder=" "
-              rows="4"
-              value={formData.message}
-              onChange={handleChange}
-            ></textarea>
-            <label>Message</label>
-            <div className="error-message">{errors.message}</div>
-          </div>
+            <fieldset className="contact-preference">
+              <legend>Preferred Contact Method</legend>
 
-          <div className="thank-you">{thankYou}</div>
+              <div className="radio-group">
 
-          <input type="submit" value="Send Message" />
-        </form>
+                <label
+                  className={
+                    formData.contact_method === "email"
+                      ? "radio-option selected-option"
+                      : "radio-option"
+                  }
+                >
+                  <input
+                    type="radio"
+                    name="contact_method"
+                    value="email"
+                    checked={formData.contact_method === "email"}
+                    onChange={handleChange}
+                  />
+
+                  Email
+                </label>
+
+                <label
+                  className={
+                    formData.contact_method === "phone"
+                      ? "radio-option selected-option"
+                      : "radio-option"
+                  }
+                >
+                  <input
+                    type="radio"
+                    name="contact_method"
+                    value="phone"
+                    checked={formData.contact_method === "phone"}
+                    onChange={handleChange}
+                  />
+
+                  Phone
+                </label>
+
+              </div>
+            </fieldset>
+
+            <div className="contact-field">
+              <label htmlFor="message">Message</label>
+
+              <textarea
+                id="message"
+                name="message"
+                rows="6"
+                placeholder="Tell us how we can help"
+                value={formData.message}
+                onChange={handleChange}
+              ></textarea>
+
+              {errors.message && (
+                <div className="contact-error">
+                  {errors.message}
+                </div>
+              )}
+            </div>
+
+            {thankYou && (
+              <div className="contact-success">
+                {thankYou}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="contact-submit"
+            >
+              Send Message
+            </button>
+
+          </form>
+        </section>
+
       </section>
     </main>
   );

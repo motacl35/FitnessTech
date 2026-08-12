@@ -1,16 +1,15 @@
+
 import { useEffect, useState } from "react";
 import API_BASE from "../api/api";
+import "./RegisterPage.css";
 
 export default function RegisterPage() {
-  /* Saved Membership */
   const savedMembership = sessionStorage.getItem("selectedMembership");
 
-  /* Convert Saved Membership Into an Object */
   const selectedMembership = savedMembership
     ? JSON.parse(savedMembership)
     : null;
 
-  /* Registration Form */
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -18,14 +17,11 @@ export default function RegisterPage() {
     membershipId: selectedMembership?._id || "",
   });
 
-  /* Membership Tiers */
   const [memberships, setMemberships] = useState([]);
 
-  /* Success and Error Messages */
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  /* Get Membership Tiers */
   useEffect(() => {
     fetch(`${API_BASE}/memberships`)
       .then((res) => res.json())
@@ -37,7 +33,6 @@ export default function RegisterPage() {
       });
   }, []);
 
-  /* Handle Membership Change */
   function handleMembershipChange(e) {
     const membershipId = e.target.value;
 
@@ -58,7 +53,6 @@ export default function RegisterPage() {
     }
   }
 
-  /* Submit Registration Form */
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -66,7 +60,6 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      /* Send Registration Request */
       const res = await fetch(`${API_BASE}/users`, {
         method: "POST",
         headers: {
@@ -75,19 +68,15 @@ export default function RegisterPage() {
         body: JSON.stringify(form),
       });
 
-      /* Read Server Response */
       const data = await res.json();
 
-      /* Handle Registration Error */
       if (!res.ok) {
         setError(data.error || "Registration failed");
         return;
       }
 
-      /* Show Success Message */
       setMessage("Account created. You can now log in.");
 
-      /* Clear Registration Form */
       setForm({
         username: "",
         email: "",
@@ -95,7 +84,6 @@ export default function RegisterPage() {
         membershipId: "",
       });
 
-      /* Remove Saved Membership */
       sessionStorage.removeItem("selectedMembership");
     } catch (error) {
       console.error("Registration error:", error);
@@ -104,87 +92,111 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="page">
-      <form onSubmit={handleSubmit} className="card">
-        {/* Create Account Heading */}
-        <h1>Create Account</h1>
+    <main className="register-page">
+      <section className="register-card">
+        <p className="register-kicker">
+          JOIN • TRAIN • IMPROVE
+        </p>
 
-        {/* Username Input */}
-        <input
-          type="text"
-          placeholder="Username"
-          value={form.username}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              username: e.target.value,
-            })
-          }
-          required
-        />
+        <h1 className="register-title">
+          CREATE <span>ACCOUNT</span>
+        </h1>
 
-        {/* Email Input */}
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              email: e.target.value,
-            })
-          }
-          required
-        />
+        <p className="register-description">
+          Create your FitnessTech account and choose the membership plan
+          that works best for you.
+        </p>
 
-        {/* Password Input */}
-        <input
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              password: e.target.value,
-            })
-          }
-          required
-        />
+        <form onSubmit={handleSubmit} className="register-form">
+          <label>
+            Username
+            <input
+              type="text"
+              placeholder="Enter your username"
+              value={form.username}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  username: e.target.value,
+                })
+              }
+              required
+            />
+          </label>
 
-        {/* Membership Selection */}
-        <label htmlFor="membership">
-          Membership Tier
-        </label>
+          <label>
+            Email
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={form.email}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  email: e.target.value,
+                })
+              }
+              required
+            />
+          </label>
 
-        <select
-          id="membership"
-          value={form.membershipId}
-          onChange={handleMembershipChange}
-          required
-        >
-          <option value="">Choose a membership</option>
+          <label>
+            Password
+            <input
+              type="password"
+              placeholder="Create a password"
+              value={form.password}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  password: e.target.value,
+                })
+              }
+              required
+            />
+          </label>
 
-          {memberships.map((membership) => (
-            <option
-              key={membership._id}
-              value={membership._id}
+          <label htmlFor="membership">
+            Membership Tier
+            <select
+              id="membership"
+              value={form.membershipId}
+              onChange={handleMembershipChange}
+              required
             >
-              {membership.name} - {membership.price}
-            </option>
-          ))}
-        </select>
+              <option value="">Choose a membership</option>
 
-        {/* Error Message */}
-        {error && <p className="error">{error}</p>}
+              {memberships.map((membership) => (
+                <option
+                  key={membership._id}
+                  value={membership._id}
+                >
+                  {membership.name} - {membership.price}
+                </option>
+              ))}
+            </select>
+          </label>
 
-        {/* Success Message */}
-        {message && <p className="success">{message}</p>}
+          {error && (
+            <p className="register-error">
+              {error}
+            </p>
+          )}
 
-        {/* Register Button */}
-        <button type="submit">
-          Register
-        </button>
-      </form>
+          {message && (
+            <p className="register-success">
+              {message}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="register-submit"
+          >
+            Register
+          </button>
+        </form>
+      </section>
     </main>
   );
 }
