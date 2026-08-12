@@ -1,91 +1,145 @@
-import { useEffect, useState } from "react";
-import API_BASE from "../api/api";
+import "./Homepage.css";
 
-export default function HomePage({ token }) {
-  /* Product List */
-  const [products, setProducts] = useState([]);
-
-  /* Product Form */
-  const [form, setForm] = useState({
-    name: "",
-    category: "",
-    price: "",
-    image: "",
-    description: "",
-  });
-
-  /* Error Message */
-  const [error, setError] = useState("");
-
-  /* Load Products */
-  const loadProducts = async () => {
-    const res = await fetch(`${API_BASE}/products`);
-    const data = await res.json();
-    setProducts(data);
-  };
-
-  /* Load Products When Page Opens */
-  useEffect(() => {
-    loadProducts();
-  }, []);
-
-  /* Submit Product Form */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    setError("");
-
-    const res = await fetch(`${API_BASE}/products`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        ...form,
-        price: Number(form.price),
-      }),
-    });
-
-    const data = await res.json();
-
-    /* Display Error Message */
-    if (!res.ok) {
-      setError(data.error || "Product could not be added");
-      return;
-    }
-
-    /* Clear Product Form */
-    setForm({
-      name: "",
-      category: "",
-      price: "",
-      image: "",
-      description: "",
-    });
-
-    /* Reload Product List */
-    loadProducts();
-  };
-
+function HomePage() {
   return (
-    <main className="page">
-      {/* Hero Section */}
-      <section className="hero">
-        <div>
-          {/* Website Heading */}
-          <h1>
-            Fitness<span className="tech-green">Tech</span>
-          </h1>
+    <div className="fitness-home">
 
-          {/* Website Description */}
-          <p>
-            Fitness<span className="tech-green">Tech</span> is a fitness
-            website where users can view memberships, browse gym products,
-            contact the gym, and manage their profile.
-          </p>
+      {/* HERO SECTION */}
+      <section className="hero-section">
+        <div className="hero-container">
+
+          <div className="hero-text">
+            <p className="small-title">
+              LEARN • TRAIN • IMPROVE
+            </p>
+
+            <h1>
+              WELCOME TO
+              <span>FITNESS TECH</span>
+            </h1>
+
+            <p className="hero-description">
+              Learn proper exercise form with step-by-step instructions,
+              workout videos, pictures, and training tools designed to
+              help you train safely and reach your goals.
+            </p>
+
+            <div className="hero-buttons">
+              <a href="/workout-videos" className="explore-button">
+                Explore Workouts
+              </a>
+
+              <a href="/workout-tracker" className="tracker-button">
+                Track A Workout
+              </a>
+            </div>
+          </div>
+
+          {/* HERO IMAGE */}
+          <div className="hero-image">
+            <div className="image-accent"></div>
+          </div>
+
         </div>
       </section>
-    </main>
+
+
+      {/* FEATURES SECTION */}
+      <section className="features-section">
+
+        <div className="feature">
+          <div className="feature-icon">
+            🏋
+          </div>
+
+          <div>
+            <h3>Learn Proper Form</h3>
+
+            <p>
+              Follow clear instructions with pictures and videos
+              to perform exercises correctly and safely.
+            </p>
+          </div>
+        </div>
+
+
+        <div className="feature">
+          <div className="feature-icon">
+            🔎
+          </div>
+
+          <div>
+            <h3>Find Workouts</h3>
+
+            <p>
+              Browse exercises by muscle group and discover
+              workouts that match your goals.
+            </p>
+          </div>
+        </div>
+
+
+        <div className="feature">
+          <div className="feature-icon">
+            📈
+          </div>
+
+          <div>
+            <h3>Track Progress</h3>
+
+            <p>
+              Save your workouts, sets, repetitions, and weight
+              so you can monitor your progress.
+            </p>
+          </div>
+        </div>
+
+      </section>
+
+
+      {/* MUSCLE GROUP SECTION */}
+      <section className="muscle-section">
+
+        <p className="small-title">
+          BROWSE BY MUSCLE GROUP
+        </p>
+
+        <h2>
+          Choose A Category
+        </h2>
+
+        <div className="muscle-grid">
+
+          <a href="/workout-videos" className="muscle-card">
+            <span>💪</span>
+            Chest
+          </a>
+
+          <a href="/workout-videos" className="muscle-card">
+            <span>🏋</span>
+            Back
+          </a>
+
+          <a href="/workout-videos" className="muscle-card">
+            <span>🦵</span>
+            Legs
+          </a>
+
+          <a href="/workout-videos" className="muscle-card">
+            <span>💪</span>
+            Arms
+          </a>
+
+          <a href="/workout-videos" className="muscle-card">
+            <span>🏋</span>
+            Shoulders
+          </a>
+
+        </div>
+      </section>
+
+    </div>
   );
 }
+
+export default HomePage;
