@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./WorkoutVideosPage.css";
 
 const videos = {
   arms: "https://www.youtube.com/embed/ykJmrZ5v0Oo",
@@ -13,28 +14,54 @@ export default function ExerciseVideosPage() {
   const [bodyPart, setBodyPart] = useState("");
 
   return (
-    <main className="page">
-      <section className="card">
-        <h1>Workout Videos</h1>
-        <p>Select a body part to view a workout video.</p>
+    <main className="videos-page">
+      <section className="videos-card">
+        <p className="videos-kicker">TRAIN • LEARN • IMPROVE</p>
 
-        <select value={bodyPart} onChange={(e) => setBodyPart(e.target.value)}>
-          <option value="">Choose Body Part</option>
-          <option value="arms">Arms</option>
-          <option value="legs">Legs</option>
-          <option value="back">Back</option>
-          <option value="chest">Chest</option>
-          <option value="shoulders">Shoulders</option>
-          <option value="core">Core</option>
-        </select>
+        <h1 className="videos-title">
+          WORKOUT <span>VIDEOS</span>
+        </h1>
+
+        <p className="videos-description">
+          Select a body part to view a workout video.
+        </p>
+
+        <div className="videos-controls">
+          <label htmlFor="bodyPart">Choose Body Part</label>
+
+          <select
+            id="bodyPart"
+            value={bodyPart}
+            onChange={(e) => setBodyPart(e.target.value)}
+          >
+            <option value="">Choose Body Part</option>
+            <option value="arms">Arms</option>
+            <option value="legs">Legs</option>
+            <option value="back">Back</option>
+            <option value="chest">Chest</option>
+            <option value="shoulders">Shoulders</option>
+            <option value="core">Core</option>
+          </select>
+        </div>
 
         {bodyPart && (
-          <div className="video-container">
-            <iframe
-              src={videos[bodyPart]}
-              title={`${bodyPart} exercise video`}
-              allowFullScreen
-            ></iframe>
+          <div className="video-section">
+            <div className="video-heading-row">
+              <h2>{bodyPart} workout</h2>
+
+              <span className="video-badge">
+                {bodyPart}
+              </span>
+            </div>
+
+            <div className="video-container">
+              <iframe
+                src={videos[bodyPart]}
+                title={`${bodyPart} exercise video`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
           </div>
         )}
       </section>

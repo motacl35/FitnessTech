@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE from "../api/api";
+import "./LoginPage.css";
 
 export default function LoginPage({ onLogin }) {
   const navigate = useNavigate();
@@ -36,27 +37,68 @@ export default function LoginPage({ onLogin }) {
   };
 
   return (
-    <main className="page">
-      <form onSubmit={handleSubmit} className="card">
-        <h1>Login</h1>
+    <main className="login-page">
+      <section className="login-card">
 
-        <input
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
+        <p className="login-kicker">
+          WELCOME BACK
+        </p>
 
-        <input
-          placeholder="Password"
-          type="password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-        />
+        <h1 className="login-title">
+          LOGIN TO <span>FITNESS TECH</span>
+        </h1>
 
-        {error && <p className="error">{error}</p>}
+        <p className="login-description">
+          Sign in to access your profile, memberships, and workout tracker.
+        </p>
 
-        <button>Login</button>
-      </form>
+        <form onSubmit={handleSubmit} className="login-form">
+
+          <label>
+            Email
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={form.email}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  email: e.target.value,
+                })
+              }
+              required
+            />
+          </label>
+
+          <label>
+            Password
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={form.password}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  password: e.target.value,
+                })
+              }
+              required
+            />
+          </label>
+
+          {error && (
+            <p className="login-error">
+              {error}
+            </p>
+          )}
+
+          <button type="submit" className="login-submit">
+            Login
+          </button>
+
+        </form>
+
+      </section>
     </main>
   );
 }

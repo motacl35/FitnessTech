@@ -1,91 +1,112 @@
-import { useEffect, useState } from "react";
-import API_BASE from "../api/api";
 
-export default function HomePage({ token }) {
-  /* Product List */
-  const [products, setProducts] = useState([]);
+import { Link } from "react-router-dom";
+import "./Homepage.css";
 
-  /* Product Form */
-  const [form, setForm] = useState({
-    name: "",
-    category: "",
-    price: "",
-    image: "",
-    description: "",
-  });
-
-  /* Error Message */
-  const [error, setError] = useState("");
-
-  /* Load Products */
-  const loadProducts = async () => {
-    const res = await fetch(`${API_BASE}/products`);
-    const data = await res.json();
-    setProducts(data);
-  };
-
-  /* Load Products When Page Opens */
-  useEffect(() => {
-    loadProducts();
-  }, []);
-
-  /* Submit Product Form */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    setError("");
-
-    const res = await fetch(`${API_BASE}/products`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        ...form,
-        price: Number(form.price),
-      }),
-    });
-
-    const data = await res.json();
-
-    /* Display Error Message */
-    if (!res.ok) {
-      setError(data.error || "Product could not be added");
-      return;
-    }
-
-    /* Clear Product Form */
-    setForm({
-      name: "",
-      category: "",
-      price: "",
-      image: "",
-      description: "",
-    });
-
-    /* Reload Product List */
-    loadProducts();
-  };
-
+export default function HomePage() {
   return (
-    <main className="page">
-      {/* Hero Section */}
-      <section className="hero">
-        <div>
-          {/* Website Heading */}
-          <h1>
-            Fitness<span className="tech-green">Tech</span>
+    <main className="home-page">
+
+      {/* HERO SECTION */}
+      <section className="hero-section">
+        <div className="hero-content">
+
+          <p className="hero-kicker">
+            LEARN • TRAIN • IMPROVE
+          </p>
+
+          <h1 className="hero-title">
+            WELCOME TO
+            <span>FITNESS TECH</span>
           </h1>
 
-          {/* Website Description */}
-          <p>
-            Fitness<span className="tech-green">Tech</span> is a fitness
-            website where users can view memberships, browse gym products,
-            contact the gym, and manage their profile.
+          <p className="hero-description">
+            Learn proper exercise form with step-by-step instructions,
+            workout videos, pictures, and training tools designed to help
+            you train safely and reach your goals.
           </p>
+
+          <div className="hero-buttons">
+
+            <Link
+              to="/workout-videos"
+              className="primary-button"
+            >
+              EXPLORE WORKOUTS
+            </Link>
+
+            <Link
+              to="/workout-tracker"
+              className="secondary-button"
+            >
+              TRACK A WORKOUT
+            </Link>
+
+          </div>
         </div>
       </section>
+
+
+      {/* FEATURE SECTION */}
+      <section className="feature-section">
+
+        {/* FEATURE 1 */}
+        <div className="feature-card">
+
+          <div className="feature-icon">
+            🏋️
+          </div>
+
+          <div>
+            <h2>LEARN PROPER FORM</h2>
+
+            <p>
+              Follow clear instructions with pictures and videos to
+              perform exercises correctly and safely.
+            </p>
+          </div>
+
+        </div>
+
+
+        {/* FEATURE 2 */}
+        <div className="feature-card">
+
+          <div className="feature-icon">
+            🔎
+          </div>
+
+          <div>
+            <h2>FIND WORKOUTS</h2>
+
+            <p>
+              Browse exercises by muscle group and discover workouts
+              that match your goals.
+            </p>
+          </div>
+
+        </div>
+
+
+        {/* FEATURE 3 */}
+        <div className="feature-card">
+
+          <div className="feature-icon">
+            📈
+          </div>
+
+          <div>
+            <h2>TRACK PROGRESS</h2>
+
+            <p>
+              Save your workouts, sets, repetitions, and weight so you
+              can monitor your progress.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
     </main>
   );
 }

@@ -1,15 +1,13 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE from "../api/api";
+import "./MembershipsPage.css";
 
 export default function MembershipsPage() {
-  /* Membership Data */
   const [memberships, setMemberships] = useState([]);
-
-  /* Navigation */
   const navigate = useNavigate();
 
-  /* Get Membership Tiers */
   useEffect(() => {
     fetch(`${API_BASE}/memberships`)
       .then((res) => res.json())
@@ -21,7 +19,6 @@ export default function MembershipsPage() {
       });
   }, []);
 
-  /* Select Membership */
   function handleSelectMembership(tier) {
     sessionStorage.setItem(
       "selectedMembership",
@@ -32,42 +29,73 @@ export default function MembershipsPage() {
   }
 
   return (
-    <main className="page">
-      {/* Membership Tiers */}
-      <h1>Membership Tiers</h1>
+    <main className="memberships-page">
+      <section className="memberships-container">
 
-      {/* Membership Grid */}
-      <div className="grid">
-        {memberships.map((tier) => (
-          /* Membership Card */
-          <div className="card" key={tier._id}>
-            {/* Membership Name */}
-            <h2>{tier.name}</h2>
+        <div className="memberships-header">
+          <p className="memberships-kicker">
+            CHOOSE • TRAIN • IMPROVE
+          </p>
 
-            {/* Membership Price */}
-            <h3>{tier.price}</h3>
+          <h1 className="memberships-title">
+            MEMBERSHIP <span>TIERS</span>
+          </h1>
 
-            {/* Membership Description */}
-            <p>{tier.description}</p>
+          <p className="memberships-description">
+            Choose the membership plan that works best for your fitness goals.
+          </p>
+        </div>
 
-            {/* Membership Benefits */}
-            <ul>
-              {tier.benefits.map((benefit, index) => (
-                <li key={index}>{benefit}</li>
-              ))}
-            </ul>
-
-            {/* Choose Membership Button */}
-            <button
-              type="button"
-              className="membership-button"
-              onClick={() => handleSelectMembership(tier)}
-            >
-              Choose Plan
-            </button>
+        {memberships.length === 0 ? (
+          <div className="memberships-loading">
+            <p>Loading membership plans...</p>
           </div>
-        ))}
-      </div>
+        ) : (
+          <div className="memberships-grid">
+            {memberships.map((tier) => (
+              <article
+                className="membership-card"
+                key={tier._id}
+              >
+                <div className="membership-card-top">
+                  <h2>{tier.name}</h2>
+
+                  <h3>{tier.price}</h3>
+                </div>
+
+                <p className="membership-description">
+                  {tier.description}
+                </p>
+
+                <div className="membership-divider"></div>
+
+                <h4>What's Included</h4>
+
+                <ul className="membership-benefits">
+                  {tier.benefits.map((benefit, index) => (
+                    <li key={index}>
+                      <span className="membership-check">
+                        ✓
+                      </span>
+
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  type="button"
+                  className="membership-button"
+                  onClick={() => handleSelectMembership(tier)}
+                >
+                  Choose Plan
+                </button>
+              </article>
+            ))}
+          </div>
+        )}
+
+      </section>
     </main>
   );
 }

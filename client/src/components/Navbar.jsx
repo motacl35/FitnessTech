@@ -1,155 +1,113 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import logo from "../assets/Logo.png";
+import { Link } from "react-router-dom";
+import "./Navbar.css";
 
-export default function Navbar({ token, username, onLogout }) {
-  /* Current Page Location */
-  const location = useLocation();
-
-  /* Side Menu State */
+function Navbar({ token, username, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
-
-  /* Close Side Menu */
-  function closeMenu() {
-    setMenuOpen(false);
-  }
-
-  /* Handle Logout */
-  function handleLogoutClick() {
-    onLogout();
-    closeMenu();
-  }
-
-  /* Display Navigation Link */
-  function navLink(path, label) {
-    if (location.pathname === path) {
-      return null;
-    }
-
-    return (
-      <Link to={path} onClick={closeMenu}>
-        {label}
-      </Link>
-    );
-  }
 
   return (
     <>
-      {/* Navbar */}
-      <nav className="navbar">
-        {/* Hamburger Button */}
+      <header className="navbar">
+        {/* Hamburger Menu */}
         <button
-          type="button"
-          className={`hamburger ${menuOpen ? "open" : ""}`}
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle navigation menu"
-          aria-expanded={menuOpen}
+          className="hamburger-button"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open menu"
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          ☰
         </button>
 
-        {/* Navbar Logo */}
-        <h2 className="navbar-logo">
-          Fitness<span className="tech-green">Tech</span>
-        </h2>
+        {/* FitnessTech Logo */}
+        <Link to="/" className="navbar-logo">
+          FITNESS<span>TECH</span>
+        </Link>
 
-        {/* Navbar User Section */}
-        <div className="navbar-user">
-          {token ? (
-            <>
-              {/* Welcome Message */}
-              <span>Welcome, {username}</span>
+        {/* Join Now / User */}
+        {!token ? (
+          <Link to="/register" className="join-now-button">
+            JOIN NOW
+          </Link>
+        ) : (
+          <div className="navbar-user">
+            <span>{username}</span>
 
-              {/* Logout Button */}
-              <button type="button" onClick={handleLogoutClick}>
-                Logout
-              </button>
-            </>
-          ) : (
-            /* Join Now Button */
-            <Link
-              to="/register"
-              className="join-now-button"
-              onClick={closeMenu}
-            >
-              Join Now
-            </Link>
-          )}
-        </div>
-      </nav>
+            <button onClick={onLogout} className="logout-button">
+              LOGOUT
+            </button>
+          </div>
+        )}
+      </header>
 
-      {/* Menu Overlay */}
+      {/* Dark background when menu is open */}
       {menuOpen && (
         <div
           className="menu-overlay"
-          onClick={closeMenu}
-          aria-hidden="true"
+          onClick={() => setMenuOpen(false)}
         ></div>
       )}
 
-      {/* Side Menu */}
-      <aside className={`side-menu ${menuOpen ? "show" : ""}`}>
-        {/* Side Menu Header */}
+      {/* Hamburger Side Menu */}
+      <nav className={`side-menu ${menuOpen ? "open" : ""}`}>
         <div className="side-menu-header">
-          {/* Side Menu Logo */}
-          <h2>
-            Fitness <span className="tech-green">Tech</span>
-          </h2>
+          <div className="side-menu-logo">
+            FITNESS<span>TECH</span>
+          </div>
 
-          {/* Close Menu Button */}
           <button
-            type="button"
             className="close-menu"
-            onClick={closeMenu}
-            aria-label="Close navigation menu"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
           >
             ×
           </button>
         </div>
 
-        {/* Side Menu Links */}
         <div className="side-menu-links">
-          {/* Home Link */}
-          {navLink("/", "Home")}
+          <Link to="/" onClick={() => setMenuOpen(false)}>
+            HOME
+          </Link>
 
-          {/* Memberships Link */}
-          {!token && navLink("/memberships", "Memberships")}
+          <Link to="/workout-videos" onClick={() => setMenuOpen(false)}>
+            WORKOUT VIDEOS
+          </Link>
 
-          {/* Profile Link */}
-          {token && navLink("/profile", "Profile")}
+          <Link to="/workout-tracker" onClick={() => setMenuOpen(false)}>
+            WORKOUT TRACKER
+          </Link>
 
-          {/* Workout Videos Link */}
-          {navLink("/workout-videos", "Workout Videos")}
+          <Link to="/memberships" onClick={() => setMenuOpen(false)}>
+            MEMBERSHIPS
+          </Link>
 
-          {/* Workout Tracker Link */}
-          {navLink("/workout-tracker", "Workout Tracker")}
+          <Link to="/about" onClick={() => setMenuOpen(false)}>
+            ABOUT US
+          </Link>
 
-          {/* About Link */}
-          {navLink("/about", "About")}
+          <Link to="/contact" onClick={() => setMenuOpen(false)}>
+            CONTACT US
+          </Link>
 
-          {/* Contact Link */}
-          {navLink("/contact", "Contact")}
-
-          {/* Login and Register Links */}
-          {!token ? (
+          {!token && (
             <>
-              {navLink("/login", "Login")}
-              {navLink("/register", "Register")}
+              <Link to="/login" onClick={() => setMenuOpen(false)}>
+                LOGIN
+              </Link>
+
+              <Link to="/register" onClick={() => setMenuOpen(false)}>
+                REGISTER
+              </Link>
             </>
-          ) : (
-            /* Side Menu Logout Button */
-            <button
-              type="button"
-              className="side-logout"
-              onClick={handleLogoutClick}
-            >
-              Logout
-            </button>
+          )}
+
+          {token && (
+            <Link to="/profile" onClick={() => setMenuOpen(false)}>
+              PROFILE
+            </Link>
           )}
         </div>
-      </aside>
+      </nav>
     </>
   );
 }
+
+export default Navbar;
