@@ -1,0 +1,213 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap");
+
+.videos-page {
+  min-height: calc(100vh - 90px);
+
+  padding: 70px 20px;
+
+  background:
+    radial-gradient(
+      circle at 75% 15%,
+      rgba(204, 255, 0, 0.08),
+      transparent 30%
+    ),
+    #070807;
+
+  color: #f5f5f5;
+
+  font-family: "Inter", sans-serif;
+}
+
+.videos-card {
+  width: min(1200px, 92%);
+
+  margin: 0 auto;
+
+  padding: 40px;
+
+  background: #131613;
+
+  border: 1px solid #292e29;
+  border-radius: 14px;
+}
+
+.videos-kicker {
+  margin: 0 0 12px;
+
+  color: #ccff00;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 16px;
+  font-weight: 800;
+
+  letter-spacing: 4px;
+
+  text-transform: uppercase;
+}
+
+.videos-title {
+  margin: 0 0 15px;
+
+  color: #f5f5f5;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 58px;
+  font-weight: 800;
+
+  line-height: 1;
+
+  text-transform: uppercase;
+}
+
+.videos-title span {
+  color: #ccff00;
+}
+
+.videos-description {
+  margin: 0;
+
+  color: #a1a6a0;
+
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.videos-controls {
+  margin-top: 30px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  max-width: 360px;
+}
+
+.videos-controls label {
+  color: #f5f5f5;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.videos-controls select {
+  width: 100%;
+
+  padding: 14px;
+
+  background: #0a0c0a;
+
+  color: #f5f5f5;
+
+  border: 1px solid #292e29;
+  border-radius: 7px;
+
+  font-family: "Inter", sans-serif;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+.videos-controls select:focus {
+  border-color: #ccff00;
+}
+
+.video-section {
+  margin-top: 40px;
+
+  padding-top: 30px;
+
+  border-top: 1px solid #292e29;
+}
+
+.video-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 18px;
+}
+
+.video-heading-row h2 {
+  margin: 0;
+
+  color: #f5f5f5;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 34px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+.video-badge {
+  padding: 7px 12px;
+
+  background: #ccff00;
+
+  color: #050505;
+
+  border-radius: 6px;
+
+  font-family: "Barlow Condensed", sans-serif;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+.video-container {
+  position: relative;
+
+  width: 100%;
+
+  padding-top: 56.25%;
+
+  overflow: hidden;
+
+  background: #050505;
+
+  border: 1px solid #292e29;
+  border-radius: 12px;
+}
+
+.video-container iframe {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  border: none;
+}
+
+@media (max-width: 700px) {
+  .videos-page {
+    padding: 40px 15px;
+  }
+
+  .videos-card {
+    width: 100%;
+
+    padding: 28px 22px;
+  }
+
+  .videos-title {
+    font-size: 44px;
+  }
+
+  .video-heading-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

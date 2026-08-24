@@ -1,0 +1,979 @@
+/* Global Layout */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  color: #222;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+
+/* Global Styles */
+
+button {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #d62828;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.92;
+}
+
+input,
+textarea,
+select {
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+
+/* Navbar */
+
+.navbar {
+  position: relative;
+  height: 75px;
+  padding: 0 32px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111;
+  color: white;
+}
+
+
+/* Navbar Logo */
+
+.navbar-logo {
+  position: absolute;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+
+/* Green Tech Text */
+
+.tech-green {
+  color: #22c55e;
+}
+
+
+/* Navbar User Section */
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+  font-weight: bold;
+}
+
+
+/* Navbar Logout Button */
+
+.navbar-user button {
+  padding: 10px 18px;
+}
+
+
+/* Hamburger Button */
+
+.hamburger {
+  width: 35px;
+  height: 26px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+
+/* Hamburger Lines */
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 4px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.25s ease;
+}
+
+
+/* Hamburger Top Line Animation */
+
+.hamburger.open span:nth-child(1) {
+  transform: translateY(11px) rotate(45deg);
+}
+
+
+/* Hamburger Middle Line Animation */
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+
+/* Hamburger Bottom Line Animation */
+
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-11px) rotate(-45deg);
+}
+
+
+/* Join Now Button */
+
+.join-now-button {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 8px;
+  background: #d62828;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.25s ease;
+}
+
+.join-now-button:hover {
+  background: #b71c1c;
+}
+
+
+/* Menu Overlay */
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 900;
+}
+
+
+/* Side Menu */
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -320px;
+  width: 320px;
+  height: 100vh;
+  padding: 28px;
+  box-sizing: border-box;
+  background: #161616;
+  color: white;
+  z-index: 1000;
+  transition: left 0.3s ease;
+  box-shadow: 4px 0 18px rgba(0, 0, 0, 0.35);
+}
+
+
+/* Show Side Menu */
+
+.side-menu.show {
+  left: 0;
+}
+
+
+/* Side Menu Header */
+
+.side-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 38px;
+}
+
+.side-menu-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 1.8rem;
+}
+
+
+/* Close Menu Button */
+
+.close-menu {
+  padding: 0;
+  background: transparent;
+  color: white;
+  font-size: 42px;
+  line-height: 1;
+}
+
+
+/* Side Menu Links */
+
+.side-menu-links {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.side-menu-links a,
+.side-logout {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: white;
+  text-align: left;
+  text-decoration: none;
+  font-size: 1.35rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.side-menu-links a:hover,
+.side-logout:hover {
+  color: #d62828;
+  opacity: 1;
+}
+
+
+/* Side Menu Logout Button */
+
+.side-logout {
+  margin-top: 14px;
+}
+
+
+/* General Page */
+
+.page {
+  padding: 2rem;
+}
+
+
+/* Hero Section */
+
+.hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+
+/* Card */
+
+.card {
+  padding: 1.5rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Grid */
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.grid .card {
+  width: 250px;
+}
+
+
+/* Membership Button */
+
+.membership-button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px;
+  font-weight: bold;
+}
+
+
+/* Selected Membership */
+
+.selected-plan {
+  margin-bottom: 18px;
+  padding: 14px;
+  background: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.selected-plan h2,
+.selected-plan h3,
+.selected-plan p {
+  margin-top: 0;
+}
+
+.selected-plan-message {
+  margin-bottom: 18px;
+  color: #555;
+}
+
+
+/* Registration Page */
+
+.page form.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.page form.card h1 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.page form.card label {
+  font-weight: bold;
+}
+
+.page form.card button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  font-weight: bold;
+}
+
+
+/* Profile Page */
+
+.profile-page {
+  display: flex;
+  justify-content: center;
+}
+
+
+/* Profile Card */
+
+.profile-card {
+  width: 100%;
+  max-width: 700px;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Profile Picture Preview */
+
+.profile-preview {
+  display: block;
+  width: 140px;
+  height: 140px;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+/* Profile Picture Placeholder */
+
+.profile-placeholder {
+  width: 140px;
+  height: 140px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ddd;
+  border-radius: 50%;
+}
+
+
+/* Profile Form */
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+
+/* Profile Message */
+
+.profile-message {
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+
+/* Profile Actions */
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+
+/* Membership Upgrade Section */
+
+.membership-upgrade-section {
+  margin-top: 24px;
+  padding: 24px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+
+
+/* Membership Required Message */
+
+.membership-required {
+  margin-bottom: 20px;
+  color: #d62828;
+  font-weight: bold;
+}
+
+
+/* Membership Options */
+
+.membership-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+
+/* Membership Choice */
+
+.membership-choice {
+  flex: 1;
+  min-width: 200px;
+  padding: 18px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.membership-choice h3 {
+  margin-top: 0;
+}
+
+.membership-choice h4 {
+  margin: 8px 0;
+  color: #d62828;
+}
+
+.membership-choice ul {
+  padding-left: 20px;
+}
+
+
+/* Membership Disclaimer */
+
+.membership-disclaimer {
+  margin-top: 20px;
+  color: #444;
+  font-size: 14px;
+}
+
+
+/* Payment Section */
+
+.payment-section {
+  margin-top: 24px;
+  padding: 24px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+
+
+/* Payment Form */
+
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+
+/* Payment Note */
+
+.payment-note {
+  margin-top: 12px;
+  color: #555;
+  font-size: 14px;
+}
+
+
+/* Contact Page */
+
+.contact-page {
+  min-height: calc(100vh - 100px);
+  padding: 50px 20px;
+  background: #f4f4f4;
+}
+
+
+/* Contact Card */
+
+.contact-card {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 35px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+}
+
+.contact-card h1 {
+  margin-bottom: 25px;
+  color: #222;
+  text-align: center;
+  font-size: 34px;
+}
+
+
+/* Contact Form */
+
+.contact-form {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+}
+
+
+/* Floating Input Group */
+
+.input-group {
+  position: relative;
+  margin-bottom: 22px;
+}
+
+
+/* Floating Input Fields */
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+  width: 100%;
+  padding: 22px 12px 10px;
+  box-sizing: border-box;
+  background: white;
+  color: black;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+
+/* Contact Textarea */
+
+.input-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+
+/* Floating Labels */
+
+.input-group label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 0 4px;
+  background: white;
+  color: #777;
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+
+
+/* Focused Input Fields */
+
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
+  outline: none;
+  border-color: #d62828;
+  box-shadow: 0 0 0 2px rgba(214, 40, 40, 0.15);
+}
+
+
+/* Floating Label on Focus */
+
+.input-group input:focus+label,
+.input-group textarea:focus+label {
+  transform: translateY(-25px);
+  color: #d62828;
+  font-size: 14px;
+}
+
+
+/* Floating Label With Entered Text */
+
+.input-group input:not(:placeholder-shown)+label,
+.input-group textarea:not(:placeholder-shown)+label {
+  transform: translateY(-25px);
+  font-size: 14px;
+}
+
+
+/* Select Field Label */
+
+.input-group.select-group label {
+  top: -10px;
+  padding: 0 6px;
+  background: white;
+  color: #777;
+  font-size: 14px;
+  transform: none;
+  z-index: 1;
+}
+
+
+/* Select Field */
+
+.input-group.select-group select {
+  padding: 18px 12px 12px;
+}
+
+
+/* Contact Preference */
+
+.contact-preference {
+  margin-bottom: 22px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.contact-preference legend {
+  padding: 0 8px;
+  color: #333;
+  font-weight: bold;
+}
+
+
+/* Radio Group */
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+
+/* Radio Option */
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+  accent-color: #d62828;
+}
+
+
+/* Selected Radio Option */
+
+.selected-option {
+  background: #fbe3e3;
+  border: 1px solid #d62828;
+  font-weight: bold;
+}
+
+
+/* Contact Button */
+
+.contact-form input[type="submit"],
+.contact-form button {
+  width: 100%;
+  padding: 14px;
+  background: #d62828;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.contact-form input[type="submit"]:hover,
+.contact-form button:hover {
+  opacity: 0.92;
+}
+
+
+/* Error Messages */
+
+.error,
+.error-message {
+  min-height: 18px;
+  color: red;
+  font-size: 13px;
+}
+
+
+/* Success Messages */
+
+.success,
+.thank-you {
+  margin-bottom: 10px;
+  color: green;
+  font-weight: bold;
+}
+
+
+/* Exercise Videos Page */
+
+.video-container {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 24px;
+  aspect-ratio: 16 / 9;
+}
+
+
+/* Exercise Video */
+
+.video-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 12px;
+}
+
+
+/* Workout Tracker Page */
+
+.workout-tracker-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+/* Workout Tracker Card */
+
+.workout-tracker-card {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+
+/* Workout Form */
+
+.workout-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  max-width: 100%;
+}
+
+.workout-form textarea,
+.workout-form button {
+  grid-column: 1 / -1;
+}
+
+
+/* Workout Tracker List */
+
+.tracker-list {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+
+/* Workout Tracker Entry */
+
+.tracker-entry {
+  padding: 16px 0;
+  border-top: 1px solid #ddd;
+}
+
+
+/* Footer */
+
+.footer p {
+  margin: 0;
+  text-align: center;
+}
+
+
+/* Tablet Responsive Design */
+
+@media (max-width: 1024px) {
+  .contact-card {
+    max-width: 90%;
+  }
+}
+
+
+/* Mobile Responsive Design */
+
+@media (max-width: 768px) {
+  /* Navbar */
+
+  .navbar {
+    height: 65px;
+    padding: 0 16px;
+  }
+
+  /* Navbar Logo */
+
+  .navbar-logo {
+    font-size: 1.5rem;
+  }
+
+  /* Navbar User Section */
+
+  .navbar-user {
+    gap: 8px;
+  }
+
+  /* Join Now Button */
+
+  .join-now-button {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+
+  /* Hero Section */
+
+  .hero {
+    flex-direction: column;
+  }
+
+  /* Grid Cards */
+
+  .grid {
+    flex-direction: column;
+  }
+
+  .grid .card {
+    width: auto;
+  }
+
+  /* Contact Card */
+
+  .contact-card {
+    padding: 25px;
+  }
+
+  /* Workout Form */
+
+  .workout-form {
+    grid-template-columns: 1fr;
+  }
+
+  /* Membership Options */
+
+  .membership-options {
+    flex-direction: column;
+  }
+}
+
+
+/* Small Mobile Responsive Design */
+
+@media (max-width: 480px) {
+  /* General Page */
+
+  .page {
+    padding: 1rem;
+  }
+
+  /* Navbar */
+
+  .navbar {
+    padding: 0 12px;
+  }
+
+  /* Navbar Logo */
+
+  .navbar-logo {
+    font-size: 1.2rem;
+  }
+
+  /* Navbar Welcome Message */
+
+  .navbar-user span {
+    display: none;
+  }
+
+  /* Join Now Button */
+
+  .join-now-button {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  /* Side Menu */
+
+  .side-menu {
+    left: -280px;
+    width: 280px;
+    padding: 22px;
+  }
+
+  /* Contact Page */
+
+  .contact-page {
+    padding: 25px 10px;
+  }
+
+  /* Contact Card Heading */
+
+  .contact-card h1 {
+    font-size: 26px;
+  }
+
+  /* Radio Group */
+
+  .radio-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Profile Card */
+
+  .profile-card {
+    padding: 1.25rem;
+  }
+
+  /* Payment Section */
+
+  .payment-section,
+  .membership-upgrade-section {
+    padding: 16px;
+  }
+}
