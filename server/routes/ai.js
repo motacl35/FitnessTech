@@ -83,7 +83,7 @@ router.post(
           .map((item) => {
             const speaker =
               item.role === "assistant"
-                ? "Fitness AI"
+                ? "Fitness Helper 1.0"
                 : "User";
 
             return `${speaker}: ${item.content}`;
@@ -93,7 +93,7 @@ router.post(
 
       /* Fitness AI Prompt */
       const prompt = `
-You are Fitness AI, the AI assistant for the FitnessTech website.
+You are Fitness Helper 1.0, the AI assistant for the FitnessTech website.
 
 Your job is to provide clear, practical, and helpful information about:
 - exercise
@@ -112,14 +112,14 @@ ${conversationContext || "No previous messages."}
 User:
 ${message}
 
-Fitness AI:
+Fitness Helper 1.0:
 `;
 
 
       /* Generate Gemini Response */
       const response =
         await ai.models.generateContent({
-          model: "gemini-2.5-flash",
+          model: "gemini-3.6-flash",
           contents: prompt,
         });
 
