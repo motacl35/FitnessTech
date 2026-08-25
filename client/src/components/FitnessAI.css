@@ -1,0 +1,351 @@
+/* FITNESS AI WIDGET*/
+
+.fitness-ai-widget {
+  position: fixed;
+
+  right: 24px;
+  bottom: 24px;
+
+  width: 360px;
+  height: 560px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border: 1px solid #dcdcdc;
+  border-radius: 16px;
+
+  box-shadow:
+    0 12px 35px
+    rgba(0, 0, 0, 0.2);
+
+  overflow: hidden;
+
+  z-index: 9999;
+}
+
+
+/* HEADER */
+
+.fitness-ai-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 16px;
+
+  background: #111827;
+  color: #ffffff;
+}
+
+
+.fitness-ai-header div {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.fitness-ai-header span {
+  margin-top: 2px;
+
+  font-size: 0.72rem;
+
+  color: #d1d5db;
+}
+
+
+.fitness-ai-minimize {
+  width: 32px;
+  height: 32px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: transparent;
+  color: white;
+
+  font-size: 1.4rem;
+
+  cursor: pointer;
+}
+
+
+/* MINIMIZED AI BUTTON */
+
+.fitness-ai-minimized {
+  position: fixed;
+
+  right: 24px;
+  bottom: 24px;
+
+  width: 58px;
+  height: 58px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #111827;
+  color: white;
+
+  font-weight: bold;
+  font-size: 1rem;
+
+  box-shadow:
+    0 8px 25px
+    rgba(0, 0, 0, 0.25);
+
+  cursor: pointer;
+
+  z-index: 9999;
+}
+
+
+/* SAVED CONVERSATIONS */
+
+.fitness-ai-history {
+  border-bottom:
+    1px solid #e5e7eb;
+
+  background: #f9fafb;
+}
+
+
+.fitness-ai-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 8px 12px;
+
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+
+.fitness-ai-history-heading button {
+  border: none;
+  background: transparent;
+
+  color: #16a34a;
+
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+
+.fitness-ai-conversation-list {
+  display: flex;
+
+  gap: 6px;
+
+  padding: 0 10px 10px;
+
+  overflow-x: auto;
+}
+
+
+.fitness-ai-conversation {
+  min-width: 125px;
+  max-width: 150px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 6px;
+
+  padding: 7px 9px;
+
+  border:
+    1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  background: white;
+
+  cursor: pointer;
+}
+
+
+.fitness-ai-conversation.active {
+  border-color: #16a34a;
+}
+
+
+.fitness-ai-conversation span:first-child {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.fitness-ai-delete {
+  color: #dc2626;
+
+  font-weight: bold;
+}
+
+
+/* GUEST NOTICE */
+
+.fitness-ai-guest-notice {
+  padding: 8px 12px;
+
+  background: #fef3c7;
+
+  color: #92400e;
+
+  font-size: 0.72rem;
+
+  text-align: center;
+}
+
+
+/* MESSAGES */
+
+.fitness-ai-messages {
+  flex: 1;
+
+  padding: 14px;
+
+  overflow-y: auto;
+
+  background: #f8fafc;
+}
+
+
+.fitness-ai-welcome {
+  margin-top: 40px;
+
+  text-align: center;
+
+  color: #6b7280;
+}
+
+
+.fitness-ai-message {
+  width: fit-content;
+  max-width: 85%;
+
+  margin-bottom: 10px;
+
+  padding: 10px 12px;
+
+  border-radius: 12px;
+
+  line-height: 1.4;
+
+  white-space: pre-wrap;
+
+  font-size: 0.9rem;
+}
+
+
+.fitness-ai-message.user {
+  margin-left: auto;
+
+  background: #16a34a;
+  color: white;
+}
+
+
+.fitness-ai-message.assistant {
+  margin-right: auto;
+
+  background: #e5e7eb;
+  color: #111827;
+}
+
+
+/* ERROR */
+
+.fitness-ai-error {
+  padding: 8px 12px;
+
+  background: #fee2e2;
+
+  color: #b91c1c;
+
+  font-size: 0.78rem;
+}
+
+
+/* FORM */
+
+.fitness-ai-form {
+  display: flex;
+
+  gap: 8px;
+
+  padding: 12px;
+
+  border-top:
+    1px solid #e5e7eb;
+
+  background: white;
+}
+
+
+.fitness-ai-form textarea {
+  flex: 1;
+
+  resize: none;
+
+  padding: 9px;
+
+  border:
+    1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+}
+
+
+.fitness-ai-form button {
+  align-self: flex-end;
+
+  padding: 10px 14px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #16a34a;
+  color: white;
+
+  cursor: pointer;
+}
+
+
+.fitness-ai-form button:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .fitness-ai-widget {
+    right: 10px;
+    bottom: 10px;
+
+    width:
+      calc(100vw - 20px);
+
+    height:
+      min(600px, 80vh);
+  }
+
+
+  .fitness-ai-minimized {
+    right: 16px;
+    bottom: 16px;
+  }
+}
