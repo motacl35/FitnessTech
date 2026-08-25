@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import FitnessAI from "./components/FitnessAI";
 
 import HomePage from "./pages/Homepage";
 import AboutPage from "./pages/AboutPage";
@@ -60,6 +61,9 @@ function App() {
         </main>
 
         <Footer />
+        {/* Persistent Fitness AI */}
+    <FitnessAI token={token} />
+
       </div>
     </BrowserRouter>
   );
