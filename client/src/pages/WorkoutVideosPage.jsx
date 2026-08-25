@@ -8,6 +8,81 @@ const videos = {
   chest: "https://www.youtube.com/embed/rT7DgCr-3pg",
   shoulders: "https://www.youtube.com/embed/qEwKCR5JCog",
   core: "https://www.youtube.com/embed/1919eTCoESo",
+  glutes: "https://www.youtube.com/embed/HzRwKt2NLQ8",
+};
+
+const trainingGuidance = { 
+  arms: { 
+    title: "Arm Training Guidance", 
+    description: 
+      "Arm workouts focus on the biceps and triceps while also engaging the shoulders and forearms.", 
+    tips: [ 
+      "Use controlled movements instead of swinging the weight.", 
+      "Keep your elbows stable during curls and extensions.", 
+      "Choose a weight that allows you to maintain proper form.", 
+      "Use a full and comfortable range of motion.", 
+    ], 
+  }, 
+  legs: { 
+    title: "Leg Training Guidance", 
+    description: "Leg training builds strength in the quadriceps, hamstrings, glutes, and calves while improving lower-body stability.", 
+    tips: [ 
+      "Keep your knees aligned with your toes.", 
+      "Maintain a strong and stable core.", 
+      "Control both the lowering and lifting portions of each repetition.", 
+      "Increase resistance gradually.", 
+    ], 
+  }, 
+  back: { 
+    title: "Back Training Guidance", 
+    description: "Back exercises help strengthen the upper and lower back while supporting posture and upper-body stability.", 
+    tips: [ 
+      "Keep your spine in a neutral position.", 
+      "Pull with your back muscles instead of relying only on your arms.", 
+      "Avoid using momentum.", 
+      "Focus on squeezing your shoulder blades together.", 
+    ], 
+  }, 
+  chest: { 
+    title: "Chest Training Guidance", 
+    description: "Chest exercises primarily target the pectoral muscles while also engaging the shoulders and triceps.", 
+    tips: [ 
+      "Keep your shoulder blades stable.", 
+      "Lower the weight slowly and maintain control.", 
+      "Avoid excessively flaring your elbows.", 
+      "Use a comfortable range of motion.", 
+    ], 
+  }, 
+  shoulders: { 
+    title: "Shoulder Training Guidance", 
+    description: "Shoulder workouts strengthen the deltoid muscles and improve upper-body stability.", 
+    tips: [ 
+      "Avoid using excessive weight.", 
+      "Keep your core engaged during overhead movements.", 
+      "Move slowly and under control.", 
+      "Avoid shrugging during raises.", 
+    ], 
+  }, 
+  core: { 
+    title: "Core Training Guidance", 
+    description: "Core exercises strengthen the abdominal muscles and other stabilizers that support posture, balance, and movement.", 
+    tips: [ 
+      "Keep your core engaged throughout each exercise.", 
+      "Avoid pulling on your neck.", 
+      "Use slow and controlled repetitions.", 
+      "Maintain steady breathing.", 
+    ], 
+  }, 
+  glutes: { 
+    title: "Glute Training Guidance", 
+    description: "Glute training targets the gluteus maximus, medius, and minimus while supporting hip strength and lower-body stability.", 
+    tips: [ 
+      "Drive through your heels during hip-focused movements.", 
+      "Squeeze your glutes at the top of each repetition.", 
+      "Keep your core engaged.", 
+      "Avoid excessively arching your lower back.", 
+    ], 
+  },
 };
 
 export default function ExerciseVideosPage() {
@@ -41,6 +116,7 @@ export default function ExerciseVideosPage() {
             <option value="chest">Chest</option>
             <option value="shoulders">Shoulders</option>
             <option value="core">Core</option>
+            <option value="glutes">Glutes</option>
           </select>
         </div>
 
@@ -63,6 +139,16 @@ export default function ExerciseVideosPage() {
               ></iframe>
             </div>
           </div>
+      <div className="training-guidance"> 
+      <h3>{trainingGuidance[bodyPart].title}</h3> 
+      <p>{trainingGuidance[bodyPart].description}</p> 
+      <h4>Training Tips</h4> 
+      <ul> 
+        {trainingGuidance[bodyPart].tips.map((tip, index) => ( 
+      <li key={index}>{tip}</li> 
+    ))} 
+      </ul> 
+    </div>
         )}
       </section>
     </main>
