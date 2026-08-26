@@ -1,11 +1,17 @@
 services:
   mongo:
     image: mongo:7
-    container_name: motas-gym-mongo
+    container_name: fitness-tech-mongodb
+
     ports:
       - "27017:27017"
+
     volumes:
-      - mongo-data:/data/db
+      - fitness-tech-data:/data/db
+
+    restart: unless-stopped
 
 volumes:
-  mongo-data:
+  fitness-tech-data:
+    external: true
+    name: 4b3c35162b6a999f15788d86540b35eea7550bd8a4d3c198f46c6a8e7870761d
