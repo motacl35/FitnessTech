@@ -6,40 +6,90 @@ const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
 
+/* LOGIN */
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { identifier, password } = req.body;
 
-    const user = await User.findOne({ email });
+    if (!identifier || !password) {
+      return res.status(400).json({
+        error: "Email/username and password are required.",
+      });
+    }
+
+    /* FIND USER BY EMAIL OR USERNAME */
+    const user = await User.findOne({
+      $or: [
+        { email: identifier },
+        { username: identifier },
+      ],
+    });
 
     if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(401).json({
+        error: "Invalid email/username or password.",
+      });
     }
 
-    const match = await bcrypt.compare(password, user.password);
-
-    if (!match) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    const token = jwt.sign(
-      { userId: user._id, username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: "2h" }
+    /* VERIFY PASSWORD */
+    const match = await bcrypt.compare(
+      password,
+      user.password
     );
 
-    res.json({
+    if (!match) {
+      return res.status(401).json({
+        error: "Invalid email/username or password.",
+      });
+    }
+
+    /* CREATE JWT */
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        username: user.username,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "2h",
+      }
+    );
+
+    /* LOGIN SUCCESS */
+    res.status(200).json({
       token,
       username: user.username,
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Login error:", err);
+
+    res.status(500).json({
+      error: "Login failed.",
+    });
   }
 });
 
+/* GET CURRENT USER */
 router.get("/me", authenticate, async (req, res) => {
-  const user = await User.findById(req.user.userId).select("-password");
-  res.json(user);
+  try {
+    const user = await User.findById(
+      req.user.userId
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found.",
+      });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Current user error:", err);
+
+    res.status(500).json({
+      error: "Could not load user.",
+    });
+  }
 });
 
 module.exports = router;

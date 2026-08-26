@@ -2,12 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE from "../api/api";
 
-
 export default function LoginPage({ onLogin }) {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    email: "",
+    identifier: "",
     password: "",
   });
 
@@ -17,29 +16,33 @@ export default function LoginPage({ onLogin }) {
     e.preventDefault();
     setError("");
 
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      setError(data.error || "Login failed");
-      return;
+      if (!res.ok) {
+        setError(data.error || "Login failed");
+        return;
+      }
+
+      onLogin(data.token, data.username);
+      navigate("/profile");
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Unable to connect to the server.");
     }
-
-    onLogin(data.token, data.username);
-    navigate("/profile");
   };
 
   return (
     <main className="login-page">
       <section className="login-card">
-
         <p className="login-kicker">
           WELCOME BACK
         </p>
@@ -53,17 +56,16 @@ export default function LoginPage({ onLogin }) {
         </p>
 
         <form onSubmit={handleSubmit} className="login-form">
-
           <label>
-            Email
+            Email/Username
             <input
-              type="email"
-              placeholder="Enter your email"
-              value={form.email}
+              type="text"
+              placeholder="Enter your email or username"
+              value={form.identifier}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  email: e.target.value,
+                  identifier: e.target.value,
                 })
               }
               required
@@ -95,9 +97,7 @@ export default function LoginPage({ onLogin }) {
           <button type="submit" className="login-submit">
             Login
           </button>
-
         </form>
-
       </section>
     </main>
   );

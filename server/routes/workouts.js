@@ -1,11 +1,12 @@
 const express = require("express");
 const Workout = require("../models/Workout");
 const authenticate = require("../middleware/authenticate");
+const requirePaidMember = require("../middleware/requirePaidMember");
 
 const router = express.Router();
 
-/* GET LOGGED-IN USER WORKOUTS */
-router.get("/", authenticate, async (req, res) => {
+/* GET LOGGED-IN PAID MEMBER WORKOUTS */
+router.get("/", authenticate, requirePaidMember, async (req, res) => {
   try {
     const workouts = await Workout.find({ user: req.user.userId }).sort({
       createdAt: -1,
@@ -19,8 +20,8 @@ router.get("/", authenticate, async (req, res) => {
   }
 });
 
-/* CREATE WORKOUT */
-router.post("/", authenticate, async (req, res) => {
+/* CREATE WORKOUT - PAID MEMBERS ONLY */
+router.post("/", authenticate, requirePaidMember, async (req, res) => {
   try {
     const workout = await Workout.create({
       ...req.body,

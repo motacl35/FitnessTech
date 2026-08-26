@@ -56,7 +56,7 @@ function App() {
             <Route path="/workout-videos" element={<WorkoutVideosPage />} />
             <Route path="/workout-tracker" element={<WorkoutTrackerPage token={token} />} />
             <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/register" element={<RegisterPage onLogin={handleLogin} />}/>
             <Route path="/profile" element={<ProfilePage token={token} />} />
           </Routes>
         </main>

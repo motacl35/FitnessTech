@@ -40,13 +40,18 @@ const userSchema = new mongoose.Schema(
 
     membershipStatus: {
       type: String,
-      enum: ["Active", "Expired", "Suspended"],
-      default: "Active",
+      enum: ["Inactive", "Active", "Expired", "Suspended"],
+      default: "Inactive",
     },
 
     memberSince: {
       type: Date,
       default: Date.now,
+    },
+
+    aiUsage: {
+      dailyCount: { type: Number, default: 0 },
+      lastUsageDate: { type: Date, default: null },
     },
 
     paymentMethod: {
