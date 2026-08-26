@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE from "../api/api";
-import "./LoginPage.css";
+
 
 export default function LoginPage({ onLogin }) {
   const navigate = useNavigate();
