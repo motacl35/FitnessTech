@@ -28,10 +28,39 @@ app.use("/api/v1/workouts", workoutRoutes);
 
 const PORT = process.env.PORT || 3001;
 
+// Check that required backend environment variables exist
+const requiredEnvironmentVariables = [
+  "MONGO_URI",
+  "JWT_SECRET",
+];
+
+const missingEnvironmentVariables =
+  requiredEnvironmentVariables.filter(
+    (variableName) => !process.env[variableName]
+  );
+
+if (missingEnvironmentVariables.length > 0) {
+  console.error(
+    `Missing required environment variables: ${missingEnvironmentVariables.join(", ")}`
+  );
+
+  console.error(
+    "Create server/.env using server/.env.example and add the required credentials."
+  );
+
+  process.exit(1);
+}
+
+// mongo connected
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB connected");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+    app.listen(PORT, () =>
+      console.log(`Server running on port ${PORT}`)
+    );
   })
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .catch((err) =>
+    console.error("MongoDB connection error:", err)
+  );
