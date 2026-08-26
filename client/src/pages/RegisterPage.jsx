@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import API_BASE from "../api/api";
-import "./RegisterPage.css";
+
 
 export default function RegisterPage() {
   const savedMembership = sessionStorage.getItem("selectedMembership");

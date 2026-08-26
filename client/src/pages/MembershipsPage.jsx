@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE from "../api/api";
-import "./MembershipsPage.css";
+
 
 export default function MembershipsPage() {
   const [memberships, setMemberships] = useState([]);

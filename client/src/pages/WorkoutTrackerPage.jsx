@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import API_BASE from "../api/api";
-import "./WorkoutTrackerPage.css";
+
 
 export default function WorkoutTracker({ token }) {
   const [form, setForm] = useState({

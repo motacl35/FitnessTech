@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./WorkoutVideosPage.css";
+
 
 const videos = {
   arms: "https://www.youtube.com/embed/ykJmrZ5v0Oo",
