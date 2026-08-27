@@ -433,8 +433,51 @@ export default function ProfilePage({ token }) {
   const availableMemberships = memberships.filter(
     (membership) => membership.name !== formData.membershipTier
   );
+  /* Get BMI Category and Description */
+function getBMIDescription(bmi) {
+  const value = Number(bmi);
 
+  if (!value) {
+    return {
+      category: "Not Available",
+      description: "Add your height and weight to calculate your BMI.",
+    };
+  }
+
+  if (value < 18.5) {
+    return {
+      category: "Underweight",
+      description:
+        "Your BMI is below the standard healthy weight range.",
+    };
+  }
+
+  if (value < 25) {
+    return {
+      category: "Healthy Weight",
+      description:
+        "Your BMI is within the standard healthy weight range.",
+    };
+  }
+
+  if (value < 30) {
+    return {
+      category: "Overweight",
+      description:
+        "Your BMI is above the standard healthy weight range.",
+    };
+  }
+
+  return {
+    category: "Obesity Range",
+    description:
+      "Your BMI is within the obesity range.",
+  };
+}
+
+const bmiInfo = getBMIDescription(formData.bmi);
   return (
+
     <main className="page profile-page">
       {/* Profile Card */}
       <section className="profile-card">
@@ -474,7 +517,55 @@ export default function ProfilePage({ token }) {
               {formData.address} {formData.city} {formData.state}{" "}
               {formData.zipCode}
             </p>
+            {/* Fitness Information */}
+<div className="fitness-information">
+  <h3>Fitness Information</h3>
 
+  {/* Height */}
+  <p>
+    Height:{" "}
+    <strong>
+      {formData.heightFeet && formData.heightInches !== ""
+        ? `${formData.heightFeet}' ${formData.heightInches}"`
+        : "Not entered"}
+    </strong>
+  </p>
+
+  {/* Weight */}
+  <p>
+    Weight:{" "}
+    <strong>
+      {formData.weight
+        ? `${formData.weight} lb`
+        : "Not entered"}
+    </strong>
+  </p>
+
+  {/* BMI */}
+  <p>
+    BMI:{" "}
+    <strong>
+      {formData.bmi || "Not calculated"}
+    </strong>
+  </p>
+
+  {/* BMI Category */}
+  <p>
+    BMI Category:{" "}
+    <strong>{bmiInfo.category}</strong>
+  </p>
+
+  {/* BMI Description */}
+  <p className="bmi-description">
+    {bmiInfo.description}
+  </p>
+
+  {/* BMI Disclaimer */}
+  <small>
+    BMI is a general screening measurement and does not directly
+    measure body fat or overall health.
+  </small>
+</div>
             {/* Current Membership */}
             <p>
               Current Membership:{" "}
