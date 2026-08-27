@@ -18,6 +18,10 @@ export default function ProfilePage({ token }) {
     phone: "",
     email: "",
     sex: "",
+    heightFeet: "",
+    heightInches: "",
+    weight: "",
+    bmi: "",
     profilePicture: "",
     currentPassword: "",
     newPassword: "",
@@ -99,6 +103,10 @@ export default function ProfilePage({ token }) {
           phone: user.phone || "",
           email: user.email || "",
           sex: user.sex || "",
+          heightFeet: user.heightFeet ?? "",
+          heightInches: user.heightInches ?? "",
+          weight: user.weight ?? "",
+          bmi: user.bmi ?? "",
           profilePicture: user.profilePicture || "",
           membershipTier: user.membershipTier || "",
           paymentMethod: user.paymentMethod || {
@@ -265,6 +273,9 @@ export default function ProfilePage({ token }) {
       phone: formData.phone,
       email: formData.email,
       sex: formData.sex,
+      heightFeet: formData.heightFeet,
+      heightInches: formData.heightInches,
+      weight: formData.weight,
       profilePicture: formData.profilePicture,
     };
 
@@ -606,7 +617,39 @@ export default function ProfilePage({ token }) {
               <option value="Female">Female</option>
               <option value="Other">Other</option>
             </select>
+            {/* Height Feet Input */}
+              <input
+                 name="heightFeet"
+                 type="number"
+                 min="3"
+                 max="8"
+                 placeholder="Height (feet)"
+                 value={formData.heightFeet}
+                 onChange={handleChange}
+              />
 
+{/* Height Inches Input */}
+<input
+  name="heightInches"
+  type="number"
+  min="0"
+  max="11"
+  placeholder="Height (inches)"
+  value={formData.heightInches}
+  onChange={handleChange}
+/>
+
+{/* Weight Input */}
+<input
+  name="weight"
+  type="number"
+  min="60"
+  max="700"
+  step="0.1"
+  placeholder="Weight (lb)"
+  value={formData.weight}
+  onChange={handleChange}
+/>
             {/* Profile Picture Input */}
             <input
               type="file"
