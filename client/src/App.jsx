@@ -1,8 +1,10 @@
+import "./App.css";
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import FitnessAI from "./components/FitnessAI";
 
 import HomePage from "./pages/Homepage";
 import AboutPage from "./pages/AboutPage";
@@ -54,12 +56,15 @@ function App() {
             <Route path="/workout-videos" element={<WorkoutVideosPage />} />
             <Route path="/workout-tracker" element={<WorkoutTrackerPage token={token} />} />
             <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/register" element={<RegisterPage onLogin={handleLogin} />}/>
             <Route path="/profile" element={<ProfilePage token={token} />} />
           </Routes>
         </main>
 
         <Footer />
+        {/* Persistent Fitness AI */}
+    <FitnessAI token={token} />
+
       </div>
     </BrowserRouter>
   );

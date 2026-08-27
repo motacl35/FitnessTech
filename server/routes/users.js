@@ -1,44 +1,112 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 const User = require("../models/User");
 const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
 
+
 /* REGISTER USER */
+
 router.post("/", async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
+    /* Validate Required Fields */
     if (!username || !email || !password) {
       return res.status(400).json({
         error: "Username, email, and password are required.",
       });
     }
 
+    /* Check Username */
+    const existingUsername = await User.findOne({
+      username,
+    });
+
+    if (existingUsername) {
+      return res.status(400).json({
+        error: "Username already exists.",
+      });
+    }
+
+    /* Check Email */
+    const existingEmail = await User.findOne({
+      email,
+    });
+
+    if (existingEmail) {
+      return res.status(400).json({
+        error: "Email already exists.",
+      });
+    }
+
+    /* Hash Password */
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    /* Create Free Account */
     const user = await User.create({
       username,
       email,
       password: hashedPassword,
+
+      /* New accounts start without a paid membership */
+      membershipTier: "",
+      membershipStatus: "Inactive",
     });
 
-    res.status(201).json({
-      id: user._id,
+    /* Create JWT */
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        username: user.username,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "2h",
+      }
+    );
+
+    /* Return Login Information */
+    return res.status(201).json({
+      message: "Account created successfully.",
+
+      token,
+
       username: user.username,
-      email: user.email,
+
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        membershipTier: user.membershipTier,
+        membershipStatus: user.membershipStatus,
+      },
     });
   } catch (err) {
-    res.status(400).json({
-      error: "Username or email already exists.",
+    console.error("Registration error:", err);
+
+    return res.status(500).json({
+      error: "Registration failed.",
     });
   }
 });
 
-/* UPDATE PROFILE ONLY */
+
+/* UPDATE PROFILE */
+
 router.put("/me", authenticate, async (req, res) => {
   try {
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found.",
+      });
+    }
+
     const {
       username,
       firstName,
@@ -58,23 +126,102 @@ router.put("/me", authenticate, async (req, res) => {
       newPassword,
     } = req.body;
 
-    const user = await User.findById(req.user.userId);
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found." });
+    /* CHECK USERNAME */
+
+    if (username && username !== user.username) {
+      const existingUsername = await User.findOne({
+        username,
+        _id: {
+          $ne: user._id,
+        },
+      });
+
+      if (existingUsername) {
+        return res.status(400).json({
+          error: "Username already exists.",
+        });
+      }
+
+      user.username = username;
     }
 
-    if (newPassword) {
+
+    /* CHECK EMAIL */
+
+    if (email && email !== user.email) {
+      const existingEmail = await User.findOne({
+        email,
+        _id: {
+          $ne: user._id,
+        },
+      });
+
+      if (existingEmail) {
+        return res.status(400).json({
+          error: "Email already exists.",
+        });
+      }
+
+      user.email = email;
+    }
+
+
+    /* UPDATE PROFILE INFORMATION */
+
+    if (firstName !== undefined) {
+      user.firstName = firstName;
+    }
+
+    if (lastName !== undefined) {
+      user.lastName = lastName;
+    }
+
+    if (address !== undefined) {
+      user.address = address;
+    }
+
+    if (city !== undefined) {
+      user.city = city;
+    }
+
+    if (state !== undefined) {
+      user.state = state;
+    }
+
+    if (zipCode !== undefined) {
+      user.zipCode = zipCode;
+    }
+
+    if (phone !== undefined) {
+      user.phone = phone;
+    }
+
+    if (sex !== undefined) {
+      user.sex = sex;
+    }
+
+    if (profilePicture !== undefined) {
+      user.profilePicture = profilePicture;
+    }
+
+
+    /* CHANGE PASSWORD */
+
+    if (newPassword && newPassword.trim() !== "") {
       if (!currentPassword) {
         return res.status(400).json({
           error: "Current password is required.",
         });
       }
 
-      const match = await bcrypt.compare(currentPassword, user.password);
+      const passwordMatches = await bcrypt.compare(
+        currentPassword,
+        user.password
+      );
 
-      if (!match) {
-        return res.status(401).json({
+      if (!passwordMatches) {
+        return res.status(400).json({
           error: "Current password is incorrect.",
         });
       }
@@ -82,184 +229,259 @@ router.put("/me", authenticate, async (req, res) => {
       user.password = await bcrypt.hash(newPassword, 10);
     }
 
-    user.username = username;
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.address = address;
-    user.city = city;
-    user.state = state;
-    user.zipCode = zipCode;
-    user.phone = phone;
-    user.email = email;
-    user.sex = sex;
-    
-   
-  /* HEIGHT VALIDATION */
-if (heightFeet !== undefined && heightFeet !== "") {
-  const feet = Number(heightFeet);
+    /* HEIGHT VALIDATION */
+    if (heightFeet !== undefined && heightFeet !== "") {
+      const feet = Number(heightFeet);
 
-  if (feet < 3 || feet > 8) {
-    return res.status(400).json({
-      error: "Height in feet must be between 3 and 8.",
-    });
-  }
+      if (Number.isNaN(feet) || feet < 3 || feet > 8) {
+        return res.status(400).json({
+          error: "Height in feet must be between 3 and 8.",
+        });
+      }
 
-  user.heightFeet = feet;
-}
+      user.heightFeet = feet;
+    }
 
-if (heightInches !== undefined && heightInches !== "") {
-  const inches = Number(heightInches);
+    if (heightInches !== undefined && heightInches !== "") {
+      const inches = Number(heightInches);
 
-  if (inches < 0 || inches > 11) {
-    return res.status(400).json({
-      error: "Height inches must be between 0 and 11.",
-    });
-  }
+      if (Number.isNaN(inches) || inches < 0 || inches > 11) {
+        return res.status(400).json({
+          error: "Height inches must be between 0 and 11.",
+        });
+      }
 
-  user.heightInches = inches;
-}
+      user.heightInches = inches;
+    }
 
-/* WEIGHT VALIDATION */
-if (weight !== undefined && weight !== "") {
-  const numericWeight = Number(weight);
+    /* WEIGHT VALIDATION */
+    if (weight !== undefined && weight !== "") {
+      const numericWeight = Number(weight);
 
-  if (numericWeight < 60 || numericWeight > 700) {
-    return res.status(400).json({
-      error: "Weight must be between 60 and 700 pounds.",
-    });
-  }
+      if (
+        Number.isNaN(numericWeight) ||
+        numericWeight < 60 ||
+        numericWeight > 700
+      ) {
+        return res.status(400).json({
+          error: "Weight must be between 60 and 700 pounds.",
+        });
+      }
 
-  user.weight = numericWeight;
-}
-
-user.profilePicture = profilePicture;
+      user.weight = numericWeight;
+    }
 
     /* CALCULATE BMI */
-if (
-  user.heightFeet &&
-  user.heightInches !== null &&
-  user.heightInches !== undefined &&
-  user.weight
-) {
-  const totalHeightInches =
-    user.heightFeet * 12 + user.heightInches;
+    if (
+      user.heightFeet != null &&
+      user.heightInches != null &&
+      user.weight != null
+    ) {
+      const totalHeightInches =
+        user.heightFeet * 12 + user.heightInches;
 
-  user.bmi = Number(
-    (
-      (user.weight /
-        (totalHeightInches * totalHeightInches)) *
-      703
-    ).toFixed(1)
-  );
-}
- 
+      user.bmi = Number(
+        (
+          (user.weight /
+            (totalHeightInches * totalHeightInches)) *
+          703
+        ).toFixed(1)
+      );
+    }
 
+    /* SAVE USER */
 
     await user.save();
 
-    const updatedUser = await User.findById(user._id).select("-password");
 
-    res.json(updatedUser);
+    /* RETURN USER WITHOUT PASSWORD */
+
+    const updatedUser = await User.findById(user._id).select(
+      "-password"
+    );
+
+    return res.json(updatedUser);
   } catch (err) {
-    res.status(400).json({
+    console.error("Profile update error:", err);
+
+    return res.status(500).json({
       error: "Profile update failed.",
     });
   }
 });
 
-/* UPDATE MEMBERSHIP ONLY */
-router.put("/me/membership", authenticate, async (req, res) => {
-  try {
-    const { membershipTier } = req.body;
 
-    const validMemberships = ["Basic", "Plus", "Elite"];
+/* UPDATE MEMBERSHIP */
 
-    if (!validMemberships.includes(membershipTier)) {
-      return res.status(400).json({
-        error: "Invalid membership tier.",
+router.put(
+  "/me/membership",
+  authenticate,
+  async (req, res) => {
+    try {
+      const { membershipTier } = req.body;
+
+      const validMemberships = [
+        "Basic",
+        "Plus",
+        "Elite",
+      ];
+
+      /* Validate Membership */
+      if (!validMemberships.includes(membershipTier)) {
+        return res.status(400).json({
+          error: "Invalid membership tier.",
+        });
+      }
+
+
+      /* Find User */
+      const user = await User.findById(
+        req.user.userId
+      );
+
+      if (!user) {
+        return res.status(404).json({
+          error: "User not found.",
+        });
+      }
+
+
+      /* Update Membership */
+      user.membershipTier = membershipTier;
+      user.membershipStatus = "Active";
+
+
+      /*
+        Only set memberSince the first time
+        the user becomes a member.
+      */
+      if (!user.memberSince) {
+        user.memberSince = new Date();
+      }
+
+
+      await user.save();
+
+
+      /* Return Updated User */
+      const updatedUser = await User.findById(
+        user._id
+      ).select("-password");
+
+      return res.json(updatedUser);
+    } catch (err) {
+      console.error(
+        "Membership update error:",
+        err
+      );
+
+      return res.status(500).json({
+        error: "Membership update failed.",
       });
     }
-
-    const user = await User.findByIdAndUpdate(
-      req.user.userId,
-      { membershipTier },
-      { new: true }
-    ).select("-password");
-
-    if (!user) {
-      return res.status(404).json({
-        error: "User not found.",
-      });
-    }
-
-    res.json(user);
-  } catch (err) {
-    res.status(400).json({
-      error: "Membership update failed.",
-    });
   }
-});
+);
 
-/* UPDATE PAYMENT METHOD ONLY */
-router.put("/me/payment", authenticate, async (req, res) => {
-  try {
-    const {
-      paymentMethodType,
-      cardholderName,
-      cardNumber,
-      expirationMonth,
-      expirationYear,
-      billingZipCode,
-    } = req.body;
 
-    if (
-      !paymentMethodType ||
-      !cardholderName ||
-      !cardNumber ||
-      !expirationMonth ||
-      !expirationYear ||
-      !billingZipCode
-    ) {
-      return res.status(400).json({
-        error: "All payment fields are required.",
+/* UPDATE PAYMENT METHOD */
+
+router.put(
+  "/me/payment",
+  authenticate,
+  async (req, res) => {
+    try {
+      const {
+        paymentMethodType,
+        cardholderName,
+        cardNumber,
+        expirationMonth,
+        expirationYear,
+        billingZipCode,
+      } = req.body;
+
+
+      /* Validate Required Fields */
+      if (
+        !paymentMethodType ||
+        !cardholderName ||
+        !cardNumber ||
+        !expirationMonth ||
+        !expirationYear ||
+        !billingZipCode
+      ) {
+        return res.status(400).json({
+          error: "All payment fields are required.",
+        });
+      }
+
+
+      /* Remove Spaces And Non-Numeric Characters */
+      const digitsOnly = cardNumber.replace(
+        /\D/g,
+        ""
+      );
+
+
+      /* Validate Card Length */
+      if (
+        digitsOnly.length < 12 ||
+        digitsOnly.length > 19
+      ) {
+        return res.status(400).json({
+          error: "Invalid card number.",
+        });
+      }
+
+
+      /* Only Store Last Four Digits */
+      const paymentMethod = {
+        type: paymentMethodType,
+        cardholderName,
+        lastFour: digitsOnly.slice(-4),
+        expirationMonth,
+        expirationYear,
+        billingZipCode,
+      };
+
+
+      /* Find User */
+      const user = await User.findById(
+        req.user.userId
+      );
+
+      if (!user) {
+        return res.status(404).json({
+          error: "User not found.",
+        });
+      }
+
+
+      /* Save Payment Method */
+      user.paymentMethod = paymentMethod;
+
+      await user.save();
+
+
+      /* Return Updated User */
+      const updatedUser = await User.findById(
+        user._id
+      ).select("-password");
+
+      return res.json(updatedUser);
+    } catch (err) {
+      console.error(
+        "Payment update error:",
+        err
+      );
+
+      return res.status(500).json({
+        error: "Payment method update failed.",
       });
     }
-
-    const digitsOnly = cardNumber.replace(/\D/g, "");
-
-    if (digitsOnly.length < 12 || digitsOnly.length > 19) {
-      return res.status(400).json({
-        error: "Invalid card number.",
-      });
-    }
-
-    const paymentMethod = {
-      type: paymentMethodType,
-      cardholderName,
-      lastFour: digitsOnly.slice(-4),
-      expirationMonth,
-      expirationYear,
-      billingZipCode,
-    };
-
-    const user = await User.findByIdAndUpdate(
-      req.user.userId,
-      { paymentMethod },
-      { new: true }
-    ).select("-password");
-
-    if (!user) {
-      return res.status(404).json({
-        error: "User not found.",
-      });
-    }
-
-    res.json(user);
-  } catch (err) {
-    res.status(400).json({
-      error: "Payment method update failed.",
-    });
   }
-});
+);
+
+
+/* EXPORT ROUTER */
 
 module.exports = router;

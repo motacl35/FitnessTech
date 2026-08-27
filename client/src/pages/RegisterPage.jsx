@@ -1,62 +1,22 @@
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API_BASE from "../api/api";
-import "./RegisterPage.css";
 
-export default function RegisterPage() {
-  const savedMembership = sessionStorage.getItem("selectedMembership");
 
-  const selectedMembership = savedMembership
-    ? JSON.parse(savedMembership)
-    : null;
+export default function RegisterPage({ onLogin }) {
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
-    membershipId: selectedMembership?._id || "",
   });
 
-  const [memberships, setMemberships] = useState([]);
-
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetch(`${API_BASE}/memberships`)
-      .then((res) => res.json())
-      .then((data) => {
-        setMemberships(data);
-      })
-      .catch((error) => {
-        console.error("Error loading memberships:", error);
-      });
-  }, []);
-
-  function handleMembershipChange(e) {
-    const membershipId = e.target.value;
-
-    setForm({
-      ...form,
-      membershipId,
-    });
-
-    const changedMembership = memberships.find(
-      (membership) => membership._id === membershipId
-    );
-
-    if (changedMembership) {
-      sessionStorage.setItem(
-        "selectedMembership",
-        JSON.stringify(changedMembership)
-      );
-    }
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    setMessage("");
     setError("");
 
     try {
@@ -71,20 +31,23 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Registration failed");
+        setError(data.error || "Registration failed.");
         return;
       }
 
-      setMessage("Account created. You can now log in.");
+      /*
+        Registration was successful.
 
-      setForm({
-        username: "",
-        email: "",
-        password: "",
-        membershipId: "",
-      });
+        The server returns a JWT and username,
+        so use the same login function used by LoginPage.
+      */
+      onLogin(data.token, data.username);
 
-      sessionStorage.removeItem("selectedMembership");
+      /*
+        Send the newly registered user directly
+        to their profile page.
+      */
+      navigate("/profile");
     } catch (error) {
       console.error("Registration error:", error);
       setError("Unable to connect to the server.");
@@ -103,11 +66,12 @@ export default function RegisterPage() {
         </h1>
 
         <p className="register-description">
-          Create your FitnessTech account and choose the membership plan
-          that works best for you.
+          Create your free FitnessTech account. You can upgrade to a
+          membership at any time to unlock additional features.
         </p>
 
         <form onSubmit={handleSubmit} className="register-form">
+          {/* Username */}
           <label>
             Username
             <input
@@ -124,6 +88,7 @@ export default function RegisterPage() {
             />
           </label>
 
+          {/* Email */}
           <label>
             Email
             <input
@@ -140,6 +105,7 @@ export default function RegisterPage() {
             />
           </label>
 
+          {/* Password */}
           <label>
             Password
             <input
@@ -156,39 +122,14 @@ export default function RegisterPage() {
             />
           </label>
 
-          <label htmlFor="membership">
-            Membership Tier
-            <select
-              id="membership"
-              value={form.membershipId}
-              onChange={handleMembershipChange}
-              required
-            >
-              <option value="">Choose a membership</option>
-
-              {memberships.map((membership) => (
-                <option
-                  key={membership._id}
-                  value={membership._id}
-                >
-                  {membership.name} - {membership.price}
-                </option>
-              ))}
-            </select>
-          </label>
-
+          {/* Registration Error */}
           {error && (
             <p className="register-error">
               {error}
             </p>
           )}
 
-          {message && (
-            <p className="register-success">
-              {message}
-            </p>
-          )}
-
+          {/* Register Button */}
           <button
             type="submit"
             className="register-submit"

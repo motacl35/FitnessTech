@@ -9,6 +9,7 @@ const productRoutes = require("./routes/products");
 const membershipRoutes = require("./routes/memberships");
 const contactRoutes = require("./routes/contact");
 const workoutRoutes = require("./routes/workouts");
+const aiRoutes = require("./routes/ai");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/memberships", membershipRoutes);
 app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/workouts", workoutRoutes);
+app.use("/api/v1/ai", aiRoutes);
 
 const PORT = process.env.PORT || 3001;
 
