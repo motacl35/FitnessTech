@@ -433,7 +433,40 @@ select {
   flex-wrap: wrap;
   gap: 12px;
 }
+/* Fitness Information */
 
+.fitness-information {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+
+.fitness-information h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.fitness-information p {
+  margin: 8px 0;
+}
+
+.fitness-information strong {
+  font-weight: 700;
+}
+
+.bmi-description {
+  margin-top: 12px !important;
+}
+
+.fitness-information small {
+  display: block;
+  margin-top: 12px;
+  line-height: 1.4;
+  opacity: 0.75;
+}
 
 /* Membership Upgrade Section */
 
