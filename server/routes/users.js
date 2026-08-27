@@ -50,6 +50,9 @@ router.put("/me", authenticate, async (req, res) => {
       phone,
       email,
       sex,
+      heightFeet,
+      heightInches,
+      weight,
       profilePicture,
       currentPassword,
       newPassword,
@@ -89,7 +92,68 @@ router.put("/me", authenticate, async (req, res) => {
     user.phone = phone;
     user.email = email;
     user.sex = sex;
-    user.profilePicture = profilePicture;
+    
+   
+  /* HEIGHT VALIDATION */
+if (heightFeet !== undefined && heightFeet !== "") {
+  const feet = Number(heightFeet);
+
+  if (feet < 3 || feet > 8) {
+    return res.status(400).json({
+      error: "Height in feet must be between 3 and 8.",
+    });
+  }
+
+  user.heightFeet = feet;
+}
+
+if (heightInches !== undefined && heightInches !== "") {
+  const inches = Number(heightInches);
+
+  if (inches < 0 || inches > 11) {
+    return res.status(400).json({
+      error: "Height inches must be between 0 and 11.",
+    });
+  }
+
+  user.heightInches = inches;
+}
+
+/* WEIGHT VALIDATION */
+if (weight !== undefined && weight !== "") {
+  const numericWeight = Number(weight);
+
+  if (numericWeight < 60 || numericWeight > 700) {
+    return res.status(400).json({
+      error: "Weight must be between 60 and 700 pounds.",
+    });
+  }
+
+  user.weight = numericWeight;
+}
+
+user.profilePicture = profilePicture;
+
+    /* CALCULATE BMI */
+if (
+  user.heightFeet &&
+  user.heightInches !== null &&
+  user.heightInches !== undefined &&
+  user.weight
+) {
+  const totalHeightInches =
+    user.heightFeet * 12 + user.heightInches;
+
+  user.bmi = Number(
+    (
+      (user.weight /
+        (totalHeightInches * totalHeightInches)) *
+      703
+    ).toFixed(1)
+  );
+}
+ 
+
 
     await user.save();
 
