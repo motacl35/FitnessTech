@@ -30,6 +30,16 @@ const userSchema = new mongoose.Schema(
     zipCode: { type: String, default: "" },
     phone: { type: String, default: "" },
     sex: { type: String, default: "" },
+    heightFeet: { type: Number,min: 3, max: 8,default: null,},
+
+heightInches: {type: Number, min: 0, max: 11, default: null,},
+
+weight: {type: Number, min: 60, max: 700,default: null,},
+
+bmi: {
+  type: Number,
+  default: null,
+},
     profilePicture: { type: String, default: "" },
 
     membershipTier: {
