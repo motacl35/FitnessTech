@@ -1098,6 +1098,31 @@ body {
   border-radius: 7px;
 }
 
+.login-info {
+  margin: 8px 0 0 0;
+  padding: 10px;
+  color: #d1fae5;
+  background: rgba(34,197,94,0.06);
+  border: 1px solid rgba(34,197,94,0.12);
+  border-radius: 7px;
+}
+
+.forgot-inline {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.link-button {
+  background: transparent;
+  border: none;
+  color: #86efac;
+  padding: 6px 8px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 
 .login-submit {
   width: 100%;
@@ -1429,6 +1454,55 @@ body {
   border-radius: 14px;
 }
 
+.register-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.register-side {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+}
+
+.side-art {
+  padding: 18px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.side-quotes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 6px;
+}
+
+.quote {
+  margin: 0;
+  color: #c7f9d8;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-left: 3px solid rgba(204,255,0,0.18);
+  padding-left: 10px;
+}
+
+@media (max-width: 980px) {
+  .register-layout {
+    grid-template-columns: 1fr;
+    padding: 0 12px;
+  }
+
+  .register-side { display: none; }
+}
+
 .register-kicker {
   margin: 0 0 12px;
 
@@ -1531,6 +1605,13 @@ body {
 
   border: 1px solid #6f2b2b;
   border-radius: 7px;
+}
+
+.register-selected-plan {
+  margin: 0;
+  color: var(--ft-lime);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .register-success {

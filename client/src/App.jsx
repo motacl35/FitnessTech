@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FitnessAI from "./components/FitnessAI";
 
-import HomePage from "./pages/Homepage";
+import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import LoginPage from "./pages/LoginPage";

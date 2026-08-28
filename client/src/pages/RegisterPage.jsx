@@ -1,18 +1,107 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE from "../api/api";
 
 
 export default function RegisterPage({ onLogin }) {
   const navigate = useNavigate();
+  const SAMPLE_TIERS = [
+    { _id: "s1", name: "Basic", price: "$9/mo" },
+    { _id: "s2", name: "Standard", price: "$19/mo" },
+    { _id: "s3", name: "Pro", price: "$39/mo" },
+    { _id: "s4", name: "Elite", price: "$69/mo" },
+  ];
 
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
+    membershipId: "",
   });
 
   const [error, setError] = useState("");
+  const [memberships, setMemberships] = useState([]);
+  const [selectedMembership] = useState(() => {
+    try {
+      const raw = sessionStorage.getItem("selectedMembership");
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    fetch(`${API_BASE}/memberships`)
+      .then((res) => res.json())
+      .then((data) => {
+        setMemberships(data);
+
+        // If a membership was pre-selected (from questionnaire), ensure the form selects the matching id.
+        if (selectedMembership) {
+          const match = data.find((m) => {
+            const sameId = m._id && selectedMembership._id && m._id === selectedMembership._id;
+            const sameName =
+              m.name &&
+              selectedMembership.name &&
+              m.name.toLowerCase() === selectedMembership.name.toLowerCase();
+            return sameId || sameName;
+          });
+
+          if (match) {
+            setForm((prev) => ({ ...prev, membershipId: match._id }));
+            // Keep canonical object in storage for later screens.
+            sessionStorage.setItem("selectedMembership", JSON.stringify(match));
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error loading memberships:", error);
+      });
+  }, [selectedMembership]);
+
+  const selectedMembershipDetails = memberships.find(
+    (membership) => membership._id === form.membershipId
+  );
+
+  const membershipOptions = (() => {
+    const baseOptions = memberships.length ? memberships : SAMPLE_TIERS;
+
+    if (!selectedMembership) return baseOptions;
+
+    const existsInList = baseOptions.some((membership) => {
+      const sameId = membership._id && selectedMembership._id && membership._id === selectedMembership._id;
+      const sameName =
+        membership.name &&
+        selectedMembership.name &&
+        membership.name.toLowerCase() === selectedMembership.name.toLowerCase();
+      return sameId || sameName;
+    });
+
+    if (existsInList) return baseOptions;
+
+    const fallbackId = selectedMembership._id || `selected-${selectedMembership.name || "membership"}`;
+    return [{ ...selectedMembership, _id: fallbackId }, ...baseOptions];
+  })();
+
+  function handleMembershipChange(e) {
+    const membershipId = e.target.value;
+
+    setForm({
+      ...form,
+      membershipId,
+    });
+
+    const changedMembership = memberships.find(
+      (membership) => membership._id === membershipId
+    );
+
+    if (changedMembership) {
+      sessionStorage.setItem(
+        "selectedMembership",
+        JSON.stringify(changedMembership)
+      );
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -56,7 +145,8 @@ export default function RegisterPage({ onLogin }) {
 
   return (
     <main className="register-page">
-      <section className="register-card">
+      <div className="register-layout">
+        <section className="register-card">
         <p className="register-kicker">
           JOIN • TRAIN • IMPROVE
         </p>
@@ -122,6 +212,27 @@ export default function RegisterPage({ onLogin }) {
             />
           </label>
 
+          <label>
+            Membership (optional)
+            <select
+              value={form.membershipId}
+              onChange={handleMembershipChange}
+            >
+              <option value="">Choose later</option>
+              {membershipOptions.map((membership) => (
+                <option key={membership._id} value={membership._id}>
+                  {membership.name} - {membership.price || "$0/mo"}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {selectedMembershipDetails && (
+            <p className="register-selected-plan">
+              Selected: {selectedMembershipDetails.name} - {selectedMembershipDetails.price}
+            </p>
+          )}
+
           {/* Registration Error */}
           {error && (
             <p className="register-error">
@@ -137,7 +248,9 @@ export default function RegisterPage({ onLogin }) {
             Register
           </button>
         </form>
-      </section>
+        </section>
+
+      </div>
     </main>
   );
 }
