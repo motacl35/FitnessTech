@@ -15,6 +15,7 @@ function FitnessAI({ token }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   const [conversations, setConversations] = useState([]);
   const [conversationId, setConversationId] = useState(null);
 
@@ -25,18 +26,25 @@ function FitnessAI({ token }) {
 
   const messagesEndRef = useRef(null);
 
-  /* LOAD ACCESS STATUS AND SAVED CONVERSATIONS */
+  /* LOAD USER AI ACCESS */
   useEffect(() => {
+    let cancelled = false;
+
     async function loadAccess() {
+      /* CLEAR PREVIOUS USER SESSION */
+      setMessages([]);
+      setInput("");
       setError("");
+      setLoading(false);
       setConversations([]);
       setConversationId(null);
+      setIsPaidMember(false);
+      setRemainingFreeMessages(null);
+      setFreeDailyLimit(5);
       setStatusLoaded(false);
 
-      /* Guest */
+      /* GUEST USER */
       if (!token) {
-        setIsPaidMember(false);
-        setRemainingFreeMessages(null);
         setStatusLoaded(true);
         return;
       }
@@ -44,43 +52,70 @@ function FitnessAI({ token }) {
       try {
         const status = await getAIStatus(token);
 
+        if (cancelled) {
+          return;
+        }
+
         setIsPaidMember(status.isPaidMember);
         setRemainingFreeMessages(status.remainingFreeMessages);
         setFreeDailyLimit(status.freeDailyLimit || 5);
 
+        /* LOAD PAID MEMBER CONVERSATIONS */
         if (status.isPaidMember) {
           const savedConversations = await getAIConversations(token);
+
+          if (cancelled) {
+            return;
+          }
+
           setConversations(savedConversations);
         }
       } catch (error) {
-        setError(error.message);
+        if (!cancelled) {
+          setError(error.message);
+        }
       } finally {
-        setStatusLoaded(true);
+        if (!cancelled) {
+          setStatusLoaded(true);
+        }
       }
     }
 
     loadAccess();
+
+    return () => {
+      cancelled = true;
+    };
   }, [token]);
 
   /* SCROLL TO NEWEST MESSAGE */
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
   }, [messages]);
 
+  /* START NEW CONVERSATION */
   function startNewConversation() {
     setConversationId(null);
     setMessages([]);
+    setInput("");
     setError("");
   }
 
+  /* SELECT SAVED CONVERSATION */
   function selectConversation(conversation) {
-    if (!isPaidMember) return;
+    if (!isPaidMember) {
+      return;
+    }
 
     setConversationId(conversation._id);
     setMessages(conversation.messages || []);
+    setInput("");
     setError("");
   }
 
+  /* SEND MESSAGE */
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -90,6 +125,7 @@ function FitnessAI({ token }) {
       return;
     }
 
+    /* CHECK FREE USER LIMIT */
     if (
       token &&
       statusLoaded &&
@@ -97,8 +133,9 @@ function FitnessAI({ token }) {
       remainingFreeMessages === 0
     ) {
       setError(
-        `You have reached your ${freeDailyLimit} free Fitness AI messages for today. Upgrade to a paid membership for full access.`
+        `You have reached your ${freeDailyLimit} free Fitness Helper messages for today. Upgrade to a paid membership for full access.`
       );
+
       return;
     }
 
@@ -111,7 +148,11 @@ function FitnessAI({ token }) {
 
     const previousMessages = messages;
 
-    setMessages([...previousMessages, userMessage]);
+    setMessages([
+      ...previousMessages,
+      userMessage,
+    ]);
+
     setInput("");
 
     try {
@@ -119,8 +160,12 @@ function FitnessAI({ token }) {
 
       const data = await sendAIMessage({
         message: trimmedInput,
-        conversationId: isPaidMember ? conversationId : null,
-        guestMessages: isPaidMember ? [] : previousMessages,
+        conversationId: isPaidMember
+          ? conversationId
+          : null,
+        guestMessages: isPaidMember
+          ? []
+          : previousMessages,
         token,
       });
 
@@ -129,23 +174,35 @@ function FitnessAI({ token }) {
         content: data.message,
       };
 
-      setMessages([...previousMessages, userMessage, assistantMessage]);
+      setMessages([
+        ...previousMessages,
+        userMessage,
+        assistantMessage,
+      ]);
 
+      /* UPDATE FREE USER LIMIT */
       if (token && !isPaidMember) {
-        setRemainingFreeMessages(data.remainingFreeMessages);
+        setRemainingFreeMessages(
+          data.remainingFreeMessages
+        );
       }
 
+      /* UPDATE PAID MEMBER CONVERSATIONS */
       if (token && isPaidMember) {
         if (!conversationId && data.conversationId) {
           setConversationId(data.conversationId);
         }
 
-        const updated = await getAIConversations(token);
-        setConversations(updated);
+        const updatedConversations =
+          await getAIConversations(token);
+
+        setConversations(updatedConversations);
       }
     } catch (error) {
       if (error.remainingFreeMessages !== undefined) {
-        setRemainingFreeMessages(error.remainingFreeMessages);
+        setRemainingFreeMessages(
+          error.remainingFreeMessages
+        );
       }
 
       setError(error.message);
@@ -154,33 +211,41 @@ function FitnessAI({ token }) {
     }
   }
 
+  /* DELETE SAVED CONVERSATION */
   async function handleDelete(event, id) {
     event.stopPropagation();
 
-    if (!isPaidMember) return;
+    if (!isPaidMember || !token) {
+      return;
+    }
 
     try {
       await deleteAIConversation(id, token);
 
       setConversations((current) =>
-        current.filter((conversation) => conversation._id !== id)
+        current.filter(
+          (conversation) => conversation._id !== id
+        )
       );
 
       if (conversationId === id) {
         setConversationId(null);
         setMessages([]);
+        setInput("");
       }
     } catch (error) {
       setError(error.message);
     }
   }
 
+  /* MINIMIZED BUTTON */
   if (minimized) {
     return (
       <button
+        type="button"
         className="fitness-ai-minimized"
         onClick={() => setMinimized(false)}
-        aria-label="Open Fitness AI"
+        aria-label="Open Fitness Helper"
       >
         Fitness Helper
       </button>
@@ -191,87 +256,122 @@ function FitnessAI({ token }) {
     <aside className="fitness-ai-widget">
       <div className="fitness-ai-header">
         <div>
-          <strong>Fitness AI</strong>
+          <strong>Fitness Helper</strong>
 
           <span>
             {!token && " Guest session"}
-            {token && isPaidMember && " Paid member • Saved conversations"}
-            {token && statusLoaded && !isPaidMember && " Free account"}
+
+            {token &&
+              statusLoaded &&
+              isPaidMember &&
+              " Paid member • Saved conversations"}
+
+            {token &&
+              statusLoaded &&
+              !isPaidMember &&
+              " Free account"}
           </span>
         </div>
 
         <button
+          type="button"
           className="fitness-ai-minimize"
           onClick={() => setMinimized(true)}
-          aria-label="Minimize Fitness AI"
+          aria-label="Minimize Fitness Helper"
         >
           −
         </button>
       </div>
 
       {/* FREE REGISTERED USER NOTICE */}
-      {token && statusLoaded && !isPaidMember && (
-        <div className="fitness-ai-guest-notice">
-          Free account: {remainingFreeMessages ?? freeDailyLimit} of {freeDailyLimit}{" "}
-          AI messages remaining today. Conversations are temporary and are not
-          saved. Upgrade to a paid membership to save conversation history.
-        </div>
-      )}
+      {token &&
+        statusLoaded &&
+        !isPaidMember && (
+          <div className="fitness-ai-guest-notice">
+            Free account:{" "}
+            {remainingFreeMessages ?? freeDailyLimit} of{" "}
+            {freeDailyLimit} AI messages remaining today.
+            Conversations are temporary and are not saved.
+            Upgrade to a paid membership to save conversation
+            history.
+          </div>
+        )}
 
       {/* GUEST NOTICE */}
       {!token && (
         <div className="fitness-ai-guest-notice">
-          Guest conversations are temporary and will disappear when you refresh
-          the page.
+          Guest conversations are temporary and will disappear
+          when you refresh the page.
         </div>
       )}
 
       {/* PAID MEMBER CONVERSATION HISTORY */}
-      {token && isPaidMember && (
-        <div className="fitness-ai-history">
-          <div className="fitness-ai-history-heading">
-            <span>Conversations</span>
+      {token &&
+        statusLoaded &&
+        isPaidMember && (
+          <div className="fitness-ai-history">
+            <div className="fitness-ai-history-heading">
+              <span>Conversations</span>
 
-            <button onClick={startNewConversation}>+ New</button>
-          </div>
-
-          <div className="fitness-ai-conversation-list">
-            {conversations.length === 0 && (
-              <p className="fitness-ai-empty">No saved conversations.</p>
-            )}
-
-            {conversations.map((conversation) => (
               <button
                 type="button"
-                key={conversation._id}
-                className={
-                  conversationId === conversation._id
-                    ? "fitness-ai-conversation active"
-                    : "fitness-ai-conversation"
-                }
-                onClick={() => selectConversation(conversation)}
+                onClick={startNewConversation}
               >
-                <span>{conversation.title}</span>
-
-                <span
-                  className="fitness-ai-delete"
-                  role="button"
-                  tabIndex="0"
-                  onClick={(event) => handleDelete(event, conversation._id)}
-                >
-                  ×
-                </span>
+                + New
               </button>
-            ))}
-          </div>
-        </div>
-      )}
+            </div>
 
+            <div className="fitness-ai-conversation-list">
+              {conversations.length === 0 && (
+                <p className="fitness-ai-empty">
+                  No saved conversations.
+                </p>
+              )}
+
+              {conversations.map((conversation) => (
+                <button
+                  type="button"
+                  key={conversation._id}
+                  className={
+                    conversationId === conversation._id
+                      ? "fitness-ai-conversation active"
+                      : "fitness-ai-conversation"
+                  }
+                  onClick={() =>
+                    selectConversation(conversation)
+                  }
+                >
+                  <span>{conversation.title}</span>
+
+                  <span
+                    className="fitness-ai-delete"
+                    role="button"
+                    tabIndex="0"
+                    onClick={(event) =>
+                      handleDelete(
+                        event,
+                        conversation._id
+                      )
+                    }
+                  >
+                    ×
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+      {/* MESSAGES */}
       <div className="fitness-ai-messages">
         {messages.length === 0 && (
           <div className="fitness-ai-welcome">
             <strong>How can I help?</strong>
-            <p>Ask me about workouts, exercises, or fitness.</p>
+
+            <p>
+              Ask me about workouts, exercises, recovery,
+              or reaching your fitness goals with FitnessTech.
+            </p>
           </div>
         )}
 
@@ -289,19 +389,32 @@ function FitnessAI({ token }) {
         ))}
 
         {loading && (
-          <div className="fitness-ai-message assistant">Thinking...</div>
+          <div className="fitness-ai-message assistant">
+            Thinking...
+          </div>
         )}
 
         <div ref={messagesEndRef} />
       </div>
 
-      {error && <div className="fitness-ai-error">{error}</div>}
+      {/* ERROR */}
+      {error && (
+        <div className="fitness-ai-error">
+          {error}
+        </div>
+      )}
 
-      <form className="fitness-ai-form" onSubmit={handleSubmit}>
+      {/* MESSAGE FORM */}
+      <form
+        className="fitness-ai-form"
+        onSubmit={handleSubmit}
+      >
         <textarea
           value={input}
-          onChange={(event) => setInput(event.target.value)}
-          placeholder="Ask Fitness AI..."
+          onChange={(event) =>
+            setInput(event.target.value)
+          }
+          placeholder="Ask Fitness Helper..."
           rows="2"
           disabled={
             token &&
